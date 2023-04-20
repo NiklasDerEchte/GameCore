@@ -1,7 +1,9 @@
 from core.core import *
 class SnowflakeEffect(Engine):
-    is_enabled = False
-    priority_layer = 2
+    def awake(self):
+        self.is_enabled = False
+        self.priority_layer = 2
+
     def start(self):
         self.surface = self.core.create_surface()
 

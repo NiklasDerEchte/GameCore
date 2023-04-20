@@ -1,7 +1,10 @@
 from core.core import *
 class GeoDrawer(Engine):
-    is_enabled = False
-    priority_layer = 99
+
+    def awake(self):
+        self.is_enabled = False
+        self.priority_layer = 99
+
     def start(self):
         self.border_color = (20, 20, 20)
         self.graph_root_pos = (round(self.core.window_size[0] / 2), round(self.core.window_size[1] / 2))

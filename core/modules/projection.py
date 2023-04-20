@@ -1,7 +1,11 @@
 from core.core import *
+
 class Projection(Engine):
-    priority_layer = 5
-    is_enabled = False
+
+    def awake(self):
+        self.is_enabled = False
+        self.priority_layer = 5
+
     def start(self):
         self.TRANSPARENT_BG = (0, 0, 0, 0)
         self.RED = (255, 0, 0)

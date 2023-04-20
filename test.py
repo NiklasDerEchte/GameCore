@@ -1,22 +1,18 @@
-import pygame.font
-
 from core import *
 
 class TestModule(Engine):
+    def awake(self):
+        self.is_enabled = True
 
     def start(self):
         print("Module Started")
-        sf = self.core.get_engine_by_class(SnowflakeEffect)
-        mg = self.core.get_engine_by_class(MagGen)
-        gd = self.core.get_engine_by_class(GeoDrawer)
-        df = self.core.get_engine_by_class(DebugFps)
-        pr = self.core.get_engine_by_class(Projection)
-
-        sf.enable(True)
-        mg.enable(True)
-        gd.enable(True)
-        df.enable(True)
-        pr.enable(True)
+        self.core.get_engine_by_class(SnowflakeEffect).enable(False)
+        self.core.get_engine_by_class(MagGen).enable(True)
+        self.core.get_engine_by_class(GeoDrawer).enable(False)
+        self.core.get_engine_by_class(DebugFps).enable(True)
+        self.core.get_engine_by_class(Projection).enable(False)
+        self.core.get_engine_by_class(AiSpawner).enable(True)
 
 
-Core(background_color=(255, 255, 255, 0), fps=30)
+
+Core(background_color=(255, 255, 255, 0), fps=30, headless=False)

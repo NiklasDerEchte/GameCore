@@ -1,7 +1,10 @@
 from core.core import *
+
 class MagGen(Engine):
-    is_enabled = False
-    priority_layer = 1
+
+    def awake(self):
+        self.is_enabled = False
+        self.priority_layer = -1
 
     def start(self):
         self.noise = PerlinNoise()
