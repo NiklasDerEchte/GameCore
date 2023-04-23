@@ -2,6 +2,9 @@ GameCore
 ========
 This project is a Python game engine that uses Pygame library to provide a game loop, input handling, and game object management.
 
+![alt text](doc/projection-example.PNG)
+![alt text](doc/mapgen-example.PNG)
+
 ## Requirements
     Python 3.5+
     Pygame library
@@ -70,6 +73,9 @@ The ``StateMachine`` class is a finite state machine implementation that allows 
 
 example: **__ai_town.py__**
 
+example 2: **__ai_simulation.py__**
+
+![img](doc/aisimulation-example.PNG)
 ### Other Libraries
 
 This project also uses the ``Perlin-Noise`` and ``Numpy`` libraries. These libraries are used for generating Perlin noise and manipulating arrays, respectively.
