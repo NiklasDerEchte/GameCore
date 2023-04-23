@@ -1,7 +1,6 @@
 from core.core import *
 
 from core.state_machine import *
-from core.ui import *
 from core.examples.geo_drawer import *
 from core.examples.snowflake_effect import *
 from core.examples.map_gen import *

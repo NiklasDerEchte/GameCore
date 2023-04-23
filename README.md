@@ -14,6 +14,7 @@ This project is a Python game engine that uses Pygame library to provide a game 
 
 The ``Engine`` class is a base class that you can inherit from to create your own custom engine. The following methods are available for you to override:
 
+- ``awake`` Is called once at the beginning to set properties.
 - ``start`` Called once at the beginning or after first enable.
 - ``on_enable`` Called when the engine has been enabled.
 - ``update`` Constantly called.
@@ -49,20 +50,31 @@ The ``Coroutine`` class is a helper class that provides a way to execute a funct
 from core import *
 class FooBar(Engine):
     def start(self):
+        self.counter = 5
         self.coroutines = [
-            Coroutine(my_func, interval=1000) # executes my_func every 1000ms
-        ]
+            Coroutine(func=self.my_func, interval=1000, call_delay=1200, loop_condition=lambda: self.counter > 0) # runs my_func in 1200 ms every 1000 ms
+        ] 
 
-    def my_func():
+    def my_func(self):
         print("Hello World")
+        self.counter = self.counter - 1
 
 ```
+
+```
+Output: 5x Hello World
+```
+
+### StateMachine
+The ``StateMachine`` class is a finite state machine implementation that allows defining states and transitions between them, and activating a specific state based on its transitions conditions. 
+
+example: **__ai_town.py__**
 
 ### Other Libraries
 
 This project also uses the ``Perlin-Noise`` and ``Numpy`` libraries. These libraries are used for generating Perlin noise and manipulating arrays, respectively.
 
-## Examples
+## Two Examples to use GameCore
 
 Here is an example of how you can use the engine to create a simple game loop:
 
