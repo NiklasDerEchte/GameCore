@@ -254,3 +254,11 @@ class Core:
             return e
         return None
 
+
+    def destroy(self, engine):
+        if isinstance(engine, Engine):
+            for e in self._engines:
+                if id(e) == id(engine):
+                    self._engines.remove(e)
+                    del e
+

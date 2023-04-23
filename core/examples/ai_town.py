@@ -1,7 +1,7 @@
 from core.core import *
 from core.state_machine import *
 
-class AiSpawner(Engine):
+class AiTownSpawner(Engine):
     def awake(self):
         self.is_enabled = False
         self.priority_layer = 50
@@ -15,13 +15,13 @@ class AiSpawner(Engine):
         ]
 
     def spawn(self):
-        self.units.append(self.core.instantiate(AiUnit))
+        self.units.append(self.core.instantiate(DefaultAiUnit))
         print("Units Alive {}".format(len(self.units)))
 
 ##############################
 #           prefab           #
 ##############################
-class AiUnit(Engine):
+class DefaultAiUnit(Engine):
     def awake(self):
         self.is_enabled = False
 
