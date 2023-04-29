@@ -7,6 +7,7 @@ from perlin_noise import PerlinNoise
 from pygame.locals import QUIT
 import inspect
 import numpy as np
+import pytmx
 
 class Coroutine:
     def __init__(self, func, interval=None, loop_condition=lambda: True, call_delay=None):
@@ -22,7 +23,10 @@ class Coroutine:
         if self._condition() and not self.is_dead:
             self._countdown = self._countdown - dt
             if self._countdown <= 0:
-                self._func()
+                ret = self._func()
+                if ret != None and isinstance(ret, dict):
+                    if 'interval' in ret:
+                        self._interval = ret['interval']
                 if self._interval == None:
                     self.is_dead = True
                 else:
@@ -36,6 +40,8 @@ class Engine:
         self.core = core
         self.is_enabled = True
         self.priority_layer = 0
+
+        # jobs
         self.coroutines = []
         self.state_machines = []
 
@@ -58,12 +64,18 @@ class Engine:
             for sm in self.state_machines:
                 sm._tick()
 
-    def enable(self, value):
+    def enable(self, value, **kwargs):
+        data = None
+        if len(kwargs.items()) > 0:
+            data = kwargs
         if value and not self.is_enabled:
+            if 'args' in inspect.getargspec(self.on_enable).args:
+                self.on_enable(args=data)
+            else:
+                self.on_enable()
             if not self._is_started:
                 self.start()
                 self._is_started = True
-            self.on_enable()
 
         self.is_enabled = value
 
@@ -71,12 +83,12 @@ class Engine:
         """is called once at the beginning to set properties"""
         pass
 
-    def start(self):
-        """is called once at the beginning or after first enable"""
+    def on_enable(self, args=None):
+        """is always called when the engine has been enabled"""
         pass
 
-    def on_enable(self):
-        """is always called when the engine has been enabled"""
+    def start(self):
+        """is called once at the beginning or after first enable"""
         pass
 
     def update(self):
@@ -123,7 +135,6 @@ class Core:
         for engine_class in Engine.__subclasses__():
             e = engine_class(self) # init new engine class
             self._engines.append(e)
-        self._engines = sorted(self._engines, key=lambda x: x.priority_layer, reverse=False)
 
     def __key_listener(self):
          self.events = pygame.event.get()
@@ -171,6 +182,7 @@ class Core:
 
     def __game_loop(self):
         self.__call_awake_func()
+        self._engines = sorted(self._engines, key=lambda x: x.priority_layer, reverse=False)
         self.__call_start_func()
         while self.is_running:
             if not self._is_headless:

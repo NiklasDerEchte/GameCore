@@ -1,6 +1,12 @@
 from core.core import *
 from core.state_machine import *
+from core.agent import *
+from core.math import *
+from core.shader import *
 
+#######################################
+# implements also the NavAgent module #
+#######################################
 
 FOOD_POSITIONS = []
 
@@ -18,8 +24,13 @@ class AiSimulationSpawner(Engine):
             Coroutine(func=self.spawn_unit, interval=900, call_delay=1200),
             Coroutine(func=self.spaw_food, interval=1100, call_delay=6000)
         ]
+        self.fog = self.core.get_engine_by_class(Fog)
+        self.fog.is_enabled = True
 
     def update(self):
+        if self.fog.is_enabled:
+            for unit in self.units:
+                self.fog.erase((unit.agent.position[0], unit.agent.position[1] + 8), 20)
         for food_pos in FOOD_POSITIONS:
             pygame.draw.circle(self.surface, (79, 213, 142), food_pos, 5)
         self.core.draw_surface(self.surface)
@@ -50,7 +61,7 @@ class SimulationAiUnit(Engine):
     def start(self):
         print("Start AI with id {}!".format(id(self)))
         self.countdown = 0
-        self.pos = (random.randint(0, self.core.window_size[0]), random.randint(0, self.core.window_size[1]))
+        self.agent = NavAgent(position=(random.randint(0, self.core.window_size[0]), random.randint(0, self.core.window_size[1])))
         self.size = 9
         self.destination_pos = (0, 0)
         self.move_range = 30
@@ -66,8 +77,8 @@ class SimulationAiUnit(Engine):
         self.font = pygame.font.SysFont('arialblack', 12)
 
         idleState = State(name='idle', init=True, start=self.idle_start, update=self.idle_update, transitions=[Transition(lambda: self.found_food_pos != None, 'hunt'), Transition(lambda: self.countdown <= 0, 'walk')])
-        movingState = State(name='walk', start=self.walk_start, update=self.walk_update, transitions=[Transition(lambda: self.found_food_pos != None, 'hunt'), Transition(lambda: self.steps_number <= 0, 'idle')])
-        huntState = State(name='hunt', start=self.hunt_start, update=self.hunt_update, transitions=[Transition(lambda: self.steps_number <= 0 or self.found_food_pos == None, 'walk')])
+        movingState = State(name='walk', start=self.walk_start, update=self.walk_update, transitions=[Transition(lambda: self.found_food_pos != None, 'hunt'), Transition(lambda: self.agent.distance <= 0, 'idle')])
+        huntState = State(name='hunt', start=self.hunt_start, update=self.hunt_update, transitions=[Transition(lambda: self.agent.distance <= 0 or self.found_food_pos == None, 'walk')])
 
         self.machine = StateMachine([idleState, movingState, huntState])
 
@@ -82,9 +93,9 @@ class SimulationAiUnit(Engine):
 
     def update(self):
         if self.surface is not None:
-            pygame.draw.circle(self.surface, (200,(self.age/self.max_age)*255,235), self.pos, self.size)
+            pygame.draw.circle(self.surface, (200,(self.age/self.max_age)*255,235), self.agent.position, self.size)
             r = 0
-            pygame.draw.circle(self.surface, (0, 0, 0), self.pos, self.size+1, width=5)
+            pygame.draw.circle(self.surface, (0, 0, 0), self.agent.position, self.size+1, width=5)
             if self.stomach > 0:
                 factor = (self.stomach/20)
                 if factor > 1.0:
@@ -93,10 +104,10 @@ class SimulationAiUnit(Engine):
                 r = hunger
             else:
                 r = 255
-            pygame.draw.circle(self.surface, (r,0,0), self.pos, self.size, width=3)
+            pygame.draw.circle(self.surface, (r,0,0), self.agent.position, self.size, width=3)
 
             text_surface = self.font.render(' {} '.format(self.age), False, (123, 166, 222), (26, 70, 128))
-            self.surface.blit(text_surface, (self.pos[0]-(text_surface.get_width()/2), self.pos[1]+10))
+            self.surface.blit(text_surface, (self.agent.position[0]-(text_surface.get_width()/2), self.agent.position[1]+10))
 
     def older_tick(self):
         self.age = self.age + 5
@@ -114,7 +125,7 @@ class SimulationAiUnit(Engine):
         found_food = None
         distance = -1
         for food_pos in FOOD_POSITIONS:
-            cur_dis = math.dist(food_pos, self.pos)
+            cur_dis = dist(self.agent.position, food_pos)
             if cur_dis <= self.view_range:
                 if distance == -1 or cur_dis < distance:
                     found_food = food_pos
@@ -127,14 +138,9 @@ class SimulationAiUnit(Engine):
     def hunt_start(self):
         self.destination_pos = self.found_food_pos
 
-        self.steps_number = max(abs(self.destination_pos[0] - self.pos[0]), abs(self.destination_pos[1] - self.pos[1]))
-
-        self.step_x = float(self.destination_pos[0] - self.pos[0]) / self.steps_number
-        self.step_y = float(self.destination_pos[1] - self.pos[1]) / self.steps_number
-
     def hunt_update(self):
-        self.pos = (self.pos[0]+self.step_x, self.pos[1]+self.step_y)
-        self.steps_number = self.steps_number - 1
+        self.agent.move(destination=self.destination_pos)
+
         food = self.search_food()
         if food != None and food != self.found_food_pos:
             self.found_food_pos = food
@@ -142,7 +148,7 @@ class SimulationAiUnit(Engine):
         if self.found_food_pos not in FOOD_POSITIONS:
             self.found_food_pos = None
         else:
-            if math.dist(self.found_food_pos, self.pos) <= 1:
+            if dist(self.agent.position, self.found_food_pos) <= 1:
                 if self.found_food_pos in FOOD_POSITIONS: # eat
                     FOOD_POSITIONS.remove(self.found_food_pos)
                     self.stomach = self.stomach + 20
@@ -160,16 +166,10 @@ class SimulationAiUnit(Engine):
 
     # walk state functions
     def walk_start(self):
-        self.destination_pos = self.random_position_within_radius(self.pos, self.move_range)
-
-        self.steps_number = max(abs(self.destination_pos[0] - self.pos[0]), abs(self.destination_pos[1] - self.pos[1]))
-
-        self.step_x = float(self.destination_pos[0] - self.pos[0]) / self.steps_number
-        self.step_y = float(self.destination_pos[1] - self.pos[1]) / self.steps_number
+        self.destination_pos = self.random_position_within_radius(self.agent.position, self.move_range)
 
     def walk_update(self):
-        self.pos = (self.pos[0]+self.step_x, self.pos[1]+self.step_y)
-        self.steps_number = self.steps_number - 1
+        self.agent.move(destination=self.destination_pos)
         self.found_food_pos = self.search_food()
 
     def random_position_within_radius(self, center, radius):
