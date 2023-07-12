@@ -1,9 +1,8 @@
 from core.core import *
 from core.state_machine import *
 
-class AiTownSpawner(Engine):
+class AiTownSpawner(Engine, Prefab):
     def awake(self):
-        self.is_enabled = False
         self.priority_layer = 50
 
     def start(self):
@@ -21,9 +20,7 @@ class AiTownSpawner(Engine):
 ##############################
 #           prefab           #
 ##############################
-class DefaultAiUnit(Engine):
-    def awake(self):
-        self.is_enabled = False
+class DefaultAiUnit(Engine, Prefab):
 
     def start(self):
         print("Start AI with id {}!".format(id(self)))

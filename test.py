@@ -1,20 +1,17 @@
 from core import *
 
 class TestModule(Engine):
-    def awake(self):
-        self.is_enabled = True
-
     def start(self):
         print("Module Started")
-        self.core.get_engine_by_class(SnowflakeEffect).enable(False)
-        self.core.get_engine_by_class(MagGen).enable(False)
-        self.core.get_engine_by_class(GeoDrawer).enable(False)
-        self.core.get_engine_by_class(DebugFps).enable(False)
-        self.core.get_engine_by_class(Projection).enable(False)
-        self.core.get_engine_by_class(AiTownSpawner).enable(False)
-        self.core.get_engine_by_class(ButtonExample).enable(False)
-        self.core.get_engine_by_class(AiSimulationSpawner).enable(False)
-        self.core.get_engine_by_class(Spaceship).enable(True)
+        # self.core.instantiate(SnowflakeEffect)
+        # self.core.instantiate(MagGen)
+        # self.core.instantiate(GeoDrawer)
+        # self.core.instantiate(DebugFps)
+        # self.core.instantiate(Projection)
+        # self.core.instantiate(AiTownSpawner)
+        # self.core.instantiate(ButtonExample)
+        # self.core.instantiate(AiSimulationSpawner)
+        # self.core.instantiate(Spaceship)
 
 
-Core(background_color=(255, 255, 255, 0), fps=30, headless=False)
+Core(background_color=(255, 255, 255, 0), fps=30)

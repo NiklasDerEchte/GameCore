@@ -1,4 +1,6 @@
 from core.core import *
+from core.math import *
+
 class NavAgent:
     def __init__(self, position, speed=1):
         self.position = position

@@ -1,8 +1,7 @@
 from core.core import *
-class GeoDrawer(Engine):
+class GeoDrawer(Engine, Prefab):
 
     def awake(self):
-        self.is_enabled = False
         self.priority_layer = 99
 
     def start(self):

@@ -10,8 +10,11 @@ import numpy as np
 import pytmx
 
 class Coroutine:
-    def __init__(self, func, interval=None, loop_condition=lambda: True, call_delay=None):
+    """ main Coroutine logic """
+    def __init__(self, func, interval=None, loop_condition=lambda: True, call_delay=None, func_args=None, func_kwargs=None):
         self.is_dead = False
+        self._func_args = func_args
+        self._func_kwargs = func_kwargs
         self._func = func
         self._interval = interval
         if not callable(loop_condition):
@@ -23,10 +26,24 @@ class Coroutine:
         if self._condition() and not self.is_dead:
             self._countdown = self._countdown - dt
             if self._countdown <= 0:
-                ret = self._func()
+                ret = None
+                if self._func_args is not None or self._func_kwargs is not None:
+                    if self._func_args is not None and self._func_kwargs is not None:
+                        ret = self._func(*self._func_args, **self._func_kwargs)
+                    elif self._func_args is not None and self._func_kwargs is None:
+                        ret = self._func(*self._func_args)
+                    elif self._func_args is None and self._func_kwargs is not None:
+                        ret = self._func(**self._func_kwargs)
+                else:
+                    ret = self._func()
                 if ret != None and isinstance(ret, dict):
                     if 'interval' in ret:
                         self._interval = ret['interval']
+                    if 'func_args' in ret:
+                        self._func_args = ret['func_args']
+                    if 'func_kwargs' in ret:
+                        self._func_kwargs = ret['func_kwargs']
+
                 if self._interval == None:
                     self.is_dead = True
                 else:
@@ -79,6 +96,18 @@ class Engine:
 
         self.is_enabled = value
 
+    def start_func_as_coroutine(self, func, **kwargs):
+        if not callable(func):
+            raise TypeError("coroutine parameter must be a function")
+        c = Coroutine(func, **kwargs)
+        self.coroutines.append(c)
+
+    def start_coroutine(self, coroutine):
+        if not isinstance(coroutine, Coroutine):
+            raise TypeError("coroutine parameter must be a Coroutine instance")
+        self.coroutines.append(coroutine)
+
+
     def awake(self):
         """is called once at the beginning to set properties"""
         pass
@@ -98,6 +127,11 @@ class Engine:
     def fixed_update(self):
         """is called in a certain tick rate"""
         pass
+
+
+class Prefab:
+    """parent class for Engine classes, to avoid insta load on start"""
+    pass
 
 class Core:
     def __init__(self, title='GameCore', size=(480, 480), update=None, start=None, fixed_update=None, background_color=(0,0,0,0), fps=30, headless=False):
@@ -133,8 +167,10 @@ class Core:
 
     def __load_engines(self):
         for engine_class in Engine.__subclasses__():
-            e = engine_class(self) # init new engine class
-            self._engines.append(e)
+            if not Prefab in engine_class.__bases__:
+                e = engine_class(self)  # init new engine class
+                self._engines.append(e)
+
 
     def __key_listener(self):
          self.events = pygame.event.get()
@@ -259,8 +295,8 @@ class Core:
             e.awake()
             if e.is_enabled:
                 e.start()
-            else:
-                e.enable(True)
+                e._is_started = True
+
             self._engines.append(e)
             self._engines = sorted(self._engines, key=lambda x: x.priority_layer, reverse=False)
             return e

@@ -4,7 +4,7 @@ import pygame.draw
 
 from core.core import *
 
-class Fog(Engine):
+class Fog(Engine, Prefab):
     def awake(self):
         self.priority_layer = 80
         self.is_enabled = False
@@ -20,7 +20,7 @@ class Fog(Engine):
         pygame.draw.circle(self.surface, (255, 255, 255, 0), position, size)
 
 
-class Lines(Engine):
+class Lines(Engine, Prefab):
     def awake(self):
         self.priority_layer = 10
         self.is_enabled = False

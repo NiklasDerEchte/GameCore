@@ -29,11 +29,11 @@ class TileMap:
 
 class Camera:
 
-    def __init__(self, camera_position: tuple[int ,int], camera_size: tuple[int, int], camera_view_rect: pygame.Rect):
+    def __init__(self, camera_view_rect: pygame.Rect, camera_position=(0,0), camera_size=(0,0)):
         self.rect = pygame.Rect(camera_position[0], camera_position[1], camera_size[0], camera_size[1])
         self.camera_view_rect = camera_view_rect
 
-    def look_at(self, target: tuple[int, int]):
+    def look_at(self, target=(0,0)):
         x = -target[0] + int(self.rect.width / 2)
         y = -target[1] + int(self.rect.height / 2)
 
@@ -58,7 +58,7 @@ class Camera:
         return (rect.x, rect.y)
 
 
-class TileMapDrawer(Engine):
+class TileMapDrawer(Engine, Prefab):
     def awake(self):
         self.is_enabled = False
         self.priority_layer = -2

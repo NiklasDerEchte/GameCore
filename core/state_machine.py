@@ -37,7 +37,8 @@ class StateMachine:
         for state in self.states:
             if state.name == state_name:
                 self.running_state = state
-                self.running_state.start_func()
+                if self.running_state.start_func != None:
+                    self.running_state.start_func()
 
     def _tick(self):
         if self.running_state != None:

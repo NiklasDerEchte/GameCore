@@ -1,9 +1,8 @@
 from core.core import *
 
-class MagGen(Engine):
+class MagGen(Engine, Prefab):
 
     def awake(self):
-        self.is_enabled = False
         self.priority_layer = -1
 
     def start(self):

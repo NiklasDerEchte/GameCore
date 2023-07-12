@@ -1,9 +1,8 @@
 from core.core import *
 from core.ui import *
-class ButtonExample(Engine):
+class ButtonExample(Engine, Prefab):
     def awake(self):
         self.priority_layer = 1000
-        self.is_enabled = False
 
     def start(self):
         self.surface = self.core.create_surface()

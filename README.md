@@ -2,7 +2,28 @@ GameCore
 ========
 This project is a Python game engine that uses Pygame library to provide a game loop, input handling, and game object management.
 
+## Changes
+
+---
+
+### coroutine
+#### <= v1.2:
+```
+self.coroutines = [
+    Coroutine(self.old_foo_fn, 30)
+]
+```
+
+#### \> v1.3:
+```
+self.start_coroutine(Coroutine(self.new_foo_fn, 30))
+or
+self.start_func_as_coroutine(self.new_foo_fn, interval=30)
+```
+
 ## Requirements
+
+---
     Python 3.5+
     Pygame library
     Perlin-Noise library
@@ -147,6 +168,24 @@ class MyEngine(Engine):
 
     def update(self):
         print("MyEngine updated")
+
+Core(background_color=(255, 255, 255, 0), fps=60)
+```
+
+## Code prefabs
+The lifecycle can be completely controlled and engines created dynamically via the parent prefab.
+
+```
+from core import *
+
+class MyPrefab(Engine, Prefab):
+    def start(self):
+        print("MyPrefab started")
+        
+class MyEngine(Engine):
+    def start(self):
+        print("MyEngine started")
+        self.core.instantiate(MyPrefab) # starts lifecycle
 
 Core(background_color=(255, 255, 255, 0), fps=60)
 ```

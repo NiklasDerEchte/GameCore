@@ -1,9 +1,8 @@
 from core.core import *
 
-class Projection(Engine):
+class Projection(Engine, Prefab):
 
     def awake(self):
-        self.is_enabled = False
         self.priority_layer = 5
 
     def start(self):

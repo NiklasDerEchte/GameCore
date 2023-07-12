@@ -1,9 +1,8 @@
 from core.core import *
 
-class DebugFps(Engine):
+class DebugFps(Engine, Prefab):
 
     def awake(self):
-        self.is_enabled = False
         self.priority_layer = 1000
 
     def start(self):

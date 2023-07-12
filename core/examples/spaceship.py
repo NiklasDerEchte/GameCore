@@ -2,15 +2,14 @@ from core.core import *
 from core.tilemap import *
 from core.shader import *
 import os
-class Spaceship(Engine):
+class Spaceship(Engine, Prefab):
     def awake(self):
-        self.is_enabled = False
         self.priority_layer = 20
 
     def start(self):
-        self.tile_map_drawer = self.core.get_engine_by_class(TileMapDrawer)
+        self.tile_map_drawer = self.core.instantiate(TileMapDrawer)
         self.tile_map_drawer.enable(True, tile_map_path=os.getcwd() + "/core/assets/space.tmx")
-        self.line_effect = self.core.get_engine_by_class(Lines)
+        self.line_effect = self.core.instantiate(Lines)
         self.line_effect.enable(True, width=self.tile_map_drawer.get_size()[0], height=self.tile_map_drawer.get_size()[1])
         self.camera = self.tile_map_drawer.get_camera()
         self.pos = (self.core.window_size[0]/2 + 50, self.core.window_size[1]/2)

@@ -1,7 +1,7 @@
 from core.core import *
-class SnowflakeEffect(Engine):
+
+class SnowflakeEffect(Engine, Prefab):
     def awake(self):
-        self.is_enabled = False
         self.priority_layer = 2
 
     def start(self):
