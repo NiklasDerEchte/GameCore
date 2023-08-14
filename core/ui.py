@@ -6,6 +6,35 @@ import os
 TOP_LEFT_ANCHOR = 'topleft'
 CENTER_ANCHOR = 'center'
 
+class ProgressBar:
+	def __init__(self, value, max_value, rect: pygame.Rect = None, fill_color=(207, 151, 0), border_color=(92, 67, 2), empty_background_color=(150, 15, 22), border_width=1):
+		if rect == None:
+			self._rect = pygame.Rect(0, 0, 17, 8)
+		else:
+			self._rect = rect
+		self._value = value
+		self._max_value = max_value
+		self._fill_color = fill_color
+		self._border_color = border_color
+		self._border_width = border_width
+		self._empty_background_color = empty_background_color
+
+	def get_size(self):
+		return (self._rect.width, self._rect.height)
+
+	def draw(self, surface: pygame.Surface, rect: pygame.Rect = None, value = None, max_value=None):
+		if value is not None:
+			self._value = value
+		if max_value is not None:
+			self._max_value = max_value
+		if rect is not None:
+			self._rect = rect
+		filled_rect_size = (self._rect.x, self._rect.y, self._rect.width * (self._value / self._max_value), self._rect.height)
+		pygame.draw.rect(surface, (100, 100, 100) if self._value > 0 else self._empty_background_color, self._rect)
+		pygame.draw.rect(surface, self._fill_color, filled_rect_size)
+		pygame.draw.rect(surface, self._border_color, self._rect, self._border_width)
+
+
 class Button:
 	def __init__(self, position=None, anchor=TOP_LEFT_ANCHOR, border_color=(100, 100, 100), border_width=3, size=(85, 35), title='Button', click=None, release=None, hover=None, title_color=(60, 60, 60), color=(152, 181, 212), hover_color=(203,223,245), click_color=(65,65,65, 200)):
 		self._title = title

@@ -1,5 +1,4 @@
-from core.core import *
-from core.ui import *
+from core import *
 class ButtonExample(Engine, Prefab):
     def awake(self):
         self.priority_layer = 1000

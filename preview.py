@@ -1,6 +1,6 @@
-from core import *
+from examples import *
 
-class TestModule(Engine):
+class PreviewModule(Engine):
     def start(self):
         print("Module Started")
         # self.core.instantiate(SnowflakeEffect)

@@ -1,4 +1,4 @@
-from core.core import *
+from core import *
 
 class MagGen(Engine, Prefab):
 

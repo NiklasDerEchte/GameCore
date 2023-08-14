@@ -1,19 +1,16 @@
-from core.core import *
-from core.tilemap import *
-from core.shader import *
-import os
+from core import *
 class Spaceship(Engine, Prefab):
     def awake(self):
         self.priority_layer = 20
 
     def start(self):
         self.tile_map_drawer = self.core.instantiate(TileMapDrawer)
-        self.tile_map_drawer.enable(True, tile_map_path=os.getcwd() + "/core/assets/space.tmx")
+        self.tile_map_drawer.enable(tile_map_path=os.getcwd() + "/examples/assets/space.tmx")
         self.line_effect = self.core.instantiate(Lines)
-        self.line_effect.enable(True, width=self.tile_map_drawer.get_size()[0], height=self.tile_map_drawer.get_size()[1])
+        self.line_effect.enable(width=self.tile_map_drawer.get_size()[0], height=self.tile_map_drawer.get_size()[1])
         self.camera = self.tile_map_drawer.get_camera()
         self.pos = (self.core.window_size[0]/2 + 50, self.core.window_size[1]/2)
-        self.spaceship_image = pygame.image.load(os.getcwd() + "/core/assets/sprites/Spaceship/sprite_0.png")
+        self.spaceship_image = pygame.image.load(os.getcwd() + "/examples/assets/sprites/Spaceship/sprite_0.png")
 
     def update(self):
         self.handle_movement(speed=2)

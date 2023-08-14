@@ -1,6 +1,4 @@
-from core.core import *
-from core.state_machine import *
-
+from core import *
 class AiTownSpawner(Engine, Prefab):
     def awake(self):
         self.priority_layer = 50

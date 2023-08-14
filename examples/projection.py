@@ -1,4 +1,4 @@
-from core.core import *
+from core import *
 
 class Projection(Engine, Prefab):
 
@@ -36,7 +36,7 @@ class Projection(Engine, Prefab):
         self.projected_points = [
             [n, n] for n in range(len(self.points))
         ]
-        self.surface = self.core.create_surface()
+        self.surface = self.core.create_layer_surface(render_layer=5)
 
     def connect_points(self, i, j, points):
         pygame.draw.line(self.surface, self.BLACK, (points[i][0], points[i][1]), (points[j][0], points[j][1]))
@@ -61,9 +61,7 @@ class Projection(Engine, Prefab):
         ])
         self.angle += 0.01
 
-        self.surface.fill(self.TRANSPARENT_BG)
         # drawining stuff
-
         i = 0
         for point in self.points:
             rotated2d = np.dot(rotation_z, point.reshape((3, 1)))
@@ -83,5 +81,3 @@ class Projection(Engine, Prefab):
             self.connect_points(p, (p+1) % 4, self.projected_points)
             self.connect_points(p+4, ((p+1) % 4) + 4, self.projected_points)
             self.connect_points(p, (p+4), self.projected_points)
-
-        self.core.draw_surface(self.surface)

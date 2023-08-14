@@ -1,4 +1,4 @@
-from core.core import *
+from core import *
 
 class DebugFps(Engine, Prefab):
 
@@ -9,7 +9,6 @@ class DebugFps(Engine, Prefab):
         self.font = pygame.font.SysFont('Arial Black', 24)
         self.text_surface = None
         self.surface = self.core.create_surface()
-
 
     def fixed_update(self):
         self.text_surface = self.font.render("FPS: {}".format(round(self.core.fps)), False, (0, 0, 0), (200, 200, 200))

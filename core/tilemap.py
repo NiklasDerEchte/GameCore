@@ -6,6 +6,7 @@ class TileMap:
         self.width = self.tmxdata.width * self.tmxdata.tilewidth
         self.height = self.tmxdata.height * self.tmxdata.tileheight
         self.animated_tiles = []
+        self.tiled_object_groups = []
 
     def render(self, surface):
         for layer in self.tmxdata.visible_layers:
@@ -13,7 +14,7 @@ class TileMap:
                 for x, y, gid, in layer:
                     tile = self.tmxdata.get_tile_image_by_gid(gid)
                     p = self.tmxdata.get_tile_properties_by_gid(gid)
-                    if len(p['frames']) > 0:
+                    if p is not None and len(p['frames']) > 0:
                         self.animated_tiles.append({
                             'grid_pos': (x * self.tmxdata.tilewidth, y * self.tmxdata.tileheight),
                             'animated_tiles': [frame for frame in p['frames']]
@@ -21,6 +22,15 @@ class TileMap:
                     if tile:
                         surface.blit(tile, (x * self.tmxdata.tilewidth,
                                             y * self.tmxdata.tileheight))
+
+            elif isinstance(layer, pytmx.TiledObjectGroup):
+                tiled_obj_group = {
+                    "layer": layer,
+                    "tiled_objs": []
+                }
+                for tiled_obj in layer:
+                    tiled_obj_group["tiled_objs"].append(tiled_obj)
+                self.tiled_object_groups.append(tiled_obj_group)
 
     def make_map(self):
         temp_surface = pygame.Surface((self.width, self.height))
@@ -64,11 +74,11 @@ class TileMapDrawer(Engine, Prefab):
         self.priority_layer = -2
         self.tile_map_path = None
 
-    def on_enable(self, args=None):
-        if args is None:
+    def on_enable(self, inject=None):
+        if inject is None:
             return
-        if 'tile_map_path' in args:
-            self.tile_map_path = args['tile_map_path']
+        if 'tile_map_path' in inject:
+            self.tile_map_path = inject['tile_map_path']
 
     def start(self):
         if self.tile_map_path is None:
@@ -77,6 +87,9 @@ class TileMapDrawer(Engine, Prefab):
             did u miss?
             .enable(True, tile_map_path='...')"""
             raise ValueError(s)
+
+        self.tile_map = None
+        self.camera = None
 
         self.tile_map = TileMap(self.tile_map_path)
         self.map, self.animated_tiles = self.tile_map.make_map()
@@ -88,7 +101,7 @@ class TileMapDrawer(Engine, Prefab):
         )
 
     def update(self):
-        if self.tile_map_path is None:
+        if self.tile_map_path is None or self.tile_map is None:
             return
 
         # calculate animation tiles
@@ -121,4 +134,6 @@ class TileMapDrawer(Engine, Prefab):
         return self.camera
 
     def get_size(self):
+        if self.tile_map == None:
+            return None
         return (self.tile_map.width, self.tile_map.height)

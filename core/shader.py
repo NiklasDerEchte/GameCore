@@ -28,12 +28,12 @@ class Lines(Engine, Prefab):
         self.width = self.core.window_size[0]
         self.height = self.core.window_size[1]
 
-    def on_enable(self, args=None):
-        if args != None:
-            if 'width' in args:
-                self.width = args['width']
-            if 'height' in args:
-                self.height = args['height']
+    def on_enable(self, inject=None):
+        if inject != None:
+            if 'width' in inject:
+                self.width = inject['width']
+            if 'height' in inject:
+                self.height = inject['height']
 
     def start(self):
         self.stripes = []

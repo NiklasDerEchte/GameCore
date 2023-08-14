@@ -1,8 +1,4 @@
-from core.core import *
-from core.state_machine import *
-from core.agent import *
-from core.math import *
-from core.shader import *
+from core import *
 
 #######################################
 # implements also the NavAgent module #
@@ -24,7 +20,7 @@ class AiSimulationSpawner(Engine, Prefab):
         ]
         self.fog = self.core.instantiate(Fog)
         self.core.instantiate(StatsDisplay)
-        self.fog.enable(True)
+        self.fog.enable()
 
     def update(self):
         if self.fog.is_enabled:
@@ -83,7 +79,7 @@ class FoodAiUnit(Engine, Prefab):
             self.destination_pos = (round_clamp(self.destination_pos[0], 0+1, self.core.window_size[0]-1),
                                     round_clamp(self.destination_pos[1], 0+1, self.core.window_size[1]-1))
         if self.surface != None:
-            pygame.draw.circle(self.surface, (79, 213, 142), self.agent.position, 5)
+            pygame.draw.circle(self.surface, (79, 213, 142), self.agent.position, self.size)
 
     def random_position_within_radius(self, center, radius):
         min_distance = radius * 0.2
