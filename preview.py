@@ -19,33 +19,6 @@ class PreviewModule(Engine):
         # self.core.instantiate(Test_Scene) # TODO <- arbeite gerade hier dran (perspective_projection 3D->2D) implement ModernGl
         # self.core.instantiate(Algo) # TODO <- Glaube ist noch was buggy
         # self.core.instantiate(GridView, grid_size=self.core.window_size)  # TODO <- Diese Parameterübergabe muss in die Dokumentation, eventuell auch die *args überneh
-        self.draw_a_star()
-
-
-
-    def draw_a_star(self):
-
-        # calculate
-        grid_view = self.core.instantiate(GridView, grid_size=self.core.window_size, priority_layer=2)
-        cell_amount = grid_view.xy_cell_amount()
-        grid = Grid(cell_amount)
-        location_a = (16, 2)
-        location_b = (10, 10)
-        start_node = grid.get_node(location_a)
-        destination_node = grid.get_node(location_b)
-        ret = grid.get_path(start_node, destination_node)
-
-        # Debug Print
-        print(ret.count())
-        print(ret)
-
-
-        # draw
-        for node in ret.get_path():
-            grid_view.get_field(node.get_position()).set_color((52, 222, 235))
-
-        grid_view.get_field(location_a).set_color((52, 153, 235))
-        grid_view.get_field(location_b).set_color((204, 52, 235))
 
 
 
