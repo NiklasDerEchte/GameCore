@@ -1,6 +1,6 @@
 from core.core import *
 from core.math import *
-# TODO: Eine version mit einer A*, damit um andere Agents und Hindernisse rum gelaufen werden können
+
 class NavAgent:
     def __init__(self, position, speed=1):
         self.position = position
