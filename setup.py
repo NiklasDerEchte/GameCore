@@ -8,7 +8,7 @@ setup(
     name="GameCore",
     version="0.1.4",
     description="GameCore is a nice runtime structure for pygame ",
-    long_description=open("README.md").read(),
+    long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     author="Niklas Wockenfuß",
     url="https://github.com/NiklasDerEchte/GameCore",
