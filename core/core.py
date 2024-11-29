@@ -1,15 +1,8 @@
 import sys
 import random
-import math
-import time
 import pygame
-from perlin_noise import PerlinNoise
-from pygame.locals import QUIT
 import inspect
-import numpy as np
-import pytmx
 import string
-import pygame_gui
 
 class Coroutine:
     """

@@ -3,7 +3,7 @@
 [![Python Version](https://img.shields.io/badge/python-3.5%2B-blue.svg)](https://www.python.org/downloads/)
 [![PyGame](https://img.shields.io/badge/pygame-107c10.svg)](https://www.pygame.org/docs/)
 [![pytmx Docs](https://img.shields.io/badge/pytxm-800000.svg)](https://pytmx.readthedocs.io/en/latest/)
-[![GameCore Docs](https://img.shields.io/badge/gamecore-docs-547bdb.svg)](https://readthedocs.org/projects/gamecore/)
+[![GameCore Docs](https://img.shields.io/badge/gamecore-docs-547bdb.svg)](https://gamecore.readthedocs.io/en/latest/)
 
 A lightweight Python library designed to streamline the development of 2D games. GameCore provides core functionality for game loops, input handling, and rendering, allowing developers to focus on creating fun and engaging gameplay experiences.
 
@@ -55,4 +55,4 @@ pip install git+https://github.com/NiklasDerEchte/GameCore.git@master
 
 The complete documentation is available at:
 
-👉 https://readthedocs.org/projects/gamecore/
+👉 https://gamecore.readthedocs.io/en/latest/
