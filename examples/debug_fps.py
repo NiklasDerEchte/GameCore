@@ -8,7 +8,7 @@ class DebugFps(Engine, Prefab):
     def start(self):
         self.font = pygame.font.SysFont('Arial Black', 24)
         self.text_surface = None
-        self.surface = self.core.create_surface()
+        self.surface = self.core.create_layer_surface(render_layer=self.priority_layer)
 
     def fixed_update(self):
         self.text_surface = self.font.render("FPS: {}".format(round(self.core.fps)), False, (0, 0, 0), (200, 200, 200))

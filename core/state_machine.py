@@ -20,17 +20,27 @@ class State:
 
 class StateMachine:
     def __init__(self, states):
-        self.states = states
+        if len(states) > 0:
+            self.set_states(states)
+        else:
+            self.states = []
+
+
+    def set_states(self, states):
         self.start_state = None
         self.running_state = None
-
+        self.states = states
         for state in self.states:
             if state.is_init and self.start_state != None:
                 raise ValueError('multiple init States')
             if state.is_init:
                 self.start_state = state
         if self.start_state == None:
-            raise ValueError('no init State')
+            if len(self.states) > 0:
+                self.start_state = self.states[0]
+                print('> no init state. first state set')
+            else:
+                raise ValueError('no init state')
         self.activate_state(self.start_state.name)
 
     def activate_state(self, state_name):

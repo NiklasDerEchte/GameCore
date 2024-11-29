@@ -9,10 +9,32 @@ import inspect
 import numpy as np
 import pytmx
 import string
+import pygame_gui
 
 class Coroutine:
-    """ main Coroutine logic """
+    """
+    Represents a coroutine that periodically executes a function.
+
+    :var is_dead: Indicates whether the coroutine is inactive.
+    :type is_dead: bool
+    """
     def __init__(self, func, interval=None, loop_condition=lambda: True, call_delay=None, func_args=None, func_kwargs=None):
+        """
+         Initializes the Coroutine.
+
+        :param func: The function to execute periodically. The function can update the 'interval', 'func_args', and 'func_kwargs' by returning them in a dictionary.
+        :type func: callable
+        :param interval: The time interval (in seconds) between executions.
+        :type interval: float
+        :param loop_condition: A function returning a boolean that determines if the coroutine should continue.
+        :type loop_condition: callable
+        :param call_delay: Initial delay before the first execution.
+        :type call_delay: float
+        :param func_args: Positional arguments to pass to `func`.
+        :type func_args: tuple
+        :param func_kwargs: Keyword arguments to pass to `func`.
+        :type func_kwargs: dict
+        """
         self.is_dead = False
         self._func_args = func_args
         self._func_kwargs = func_kwargs
@@ -53,7 +75,25 @@ class Coroutine:
             self.is_dead = True
 
 class Engine:
+    """
+     Represents a game engine responsible for managing coroutines and state machines.
+
+     :var core: Reference to the Core instance managing the game loop.
+     :type core: Core
+     :var is_enabled: Indicates whether the engine is active.
+     :type is_enabled: bool
+     :var priority_layer: Determines the order of engine execution.
+     :type priority_layer: int
+     :var state_machines: List of state machines managed by the engine.
+     :type state_machines: list
+     """
     def __init__(self, core):
+        """
+        Initializes the Engine.
+
+        :param core: The Core instance managing the game loop.
+        :type core: Core
+        """
         # public properties
         self.core = core
         self.is_enabled = True
@@ -83,6 +123,12 @@ class Engine:
                 sm._tick()
 
     def enable(self, **kwargs):
+        """
+        Enables the engine and triggers related events.
+
+        :param kwargs: Additional data passed to the `on_enable` method.
+        :type kwargs: dict
+        """
         data = None
         if len(kwargs.items()) > 0:
             data = kwargs
@@ -98,60 +144,122 @@ class Engine:
         self.is_enabled = True
 
     def disable(self):
+        """
+        Disables the engine and triggers related events.
+        """
         self.on_disable()
         self.is_enabled = False
 
 
     def start_func_as_coroutine(self, func, **kwargs):
+        """
+        Starts a function as a coroutine.
+
+        :param func: The function to execute as a coroutine.
+        :type func: callable
+        :param kwargs: Arguments for the coroutine, including interval, call_delay, and all other parameters of the Coroutine class.
+        :type kwargs: dict
+        """
         if not callable(func):
             raise TypeError("coroutine parameter must be a function")
         c = Coroutine(func, **kwargs)
         self.coroutines.append(c)
 
     def start_coroutine(self, coroutine):
+        """
+        Adds a Coroutine instance to the list of active coroutines.
+
+        :param coroutine: The Coroutine instance to start.
+        :type coroutine: Coroutine
+        """
         if not isinstance(coroutine, Coroutine):
             raise TypeError("coroutine parameter must be a Coroutine instance")
         self.coroutines.append(coroutine)
 
     def start_coroutines(self, coroutines):
+        """
+        Adds multiple Coroutine instances to the list of active coroutines.
+
+        :param coroutines: List of Coroutine instances to start.
+        :type coroutines: list
+        """
         for coroutine in coroutines:
             self.start_coroutine(coroutine)
 
-    def awake(self):
-        """is called once at the beginning to set properties"""
+    def awake(self, **kwargs):
+        """
+        Called once at the beginning of the engine's lifecycle for initialization.
+
+        :param kwargs: Optional arguments for initialization.
+        :type kwargs: dict
+        """
         pass
 
     def on_enable(self, inject=None):
-        """is always called when the engine has been enabled"""
+        """
+        Called when the engine is enabled.
+
+        :param inject: Optional data to inject during enabling.
+        :type inject: dict
+        """
         pass
 
     def on_disable(self):
-        """is always called when the engine has been disabled"""
+        """
+        Called when the engine is disabled.
+        """
         pass
 
     def start(self):
-        """is called once at the beginning or after first enable"""
+        """
+        Called when the engine starts.
+        """
         pass
 
     def update(self):
-        """is constantly called"""
+        """
+        Called continuously during the game loop.
+        """
         pass
 
     def fixed_update(self):
-        """is called in a certain tick rate"""
+        """
+        Called at fixed intervals during the game loop.
+        """
         pass
 
     def on_destroy(self):
-        """called before the engine is destroyed"""
+        """
+        Called before the engine is destroyed.
+        """
         pass
 
 
 class Prefab:
-    """parent class for Engine classes, to avoid insta load on start"""
+    """
+    Base class for engine-related components, preventing immediate execution.
+    """
     pass
 
 class SurfaceStackElement:
+    """
+    Represents an individual element in a stack of rendering surfaces.
+
+    :var name: Name identifier for the surface.
+    :type name: str
+    :var surface: The surface object to render.
+    :type surface: pygame.Surface
+    :var render_layer: The rendering order for the surface.
+    :type render_layer: int
+    :var surface_render_position: Position of the surface in the window.
+    :type surface_render_position: tuple
+    :var auto_fill: Indicates if the surface should auto-fill after rendering.
+    :type auto_fill: bool
+    """
     def __init__(self):
+        """
+        Initializes a SurfaceStackElement.
+        """
         self.name = None
         self.surface = None
         self.render_layer = 0
@@ -159,13 +267,36 @@ class SurfaceStackElement:
         self.auto_fill = False
 
     def print(self):
+        """
+        Prints information about the surface element.
+        """
         print("Surface {} with layer: {}".format(self.name, self.render_layer))
 
 class SurfaceStack:
+    """
+    Manages a stack of rendering surfaces for organized layer-based rendering.
+    """
     def __init__(self):
+        """
+        Initializes a SurfaceStack.
+        """
         self._stack = []
 
     def add_element(self, name, surface, render_layer: int, surface_render_position: tuple, fill_after_draw=True):
+        """
+        Adds a new surface element to the stack.
+
+        :param name: Unique name for the surface.
+        :type name: str
+        :param surface: The surface to add.
+        :type surface: pygame.Surface
+        :param render_layer: The rendering order.
+        :type render_layer: int
+        :param surface_render_position: Position of the surface in the window.
+        :type surface_render_position: tuple
+        :param fill_after_draw: Indicates if the surface should auto-fill after rendering.
+        :type fill_after_draw: bool
+        """
         for element in self._stack:
             if element.name == name:
                 s = "surface name \'{}\' already exists".format(name)
@@ -183,20 +314,50 @@ class SurfaceStack:
         self._stack = sorted(self._stack, key=lambda x: x.render_layer, reverse=False)
 
     def remove_element(self, name):
+        """
+        Removes a surface element from the stack.
+
+        :param name: Name of the surface to remove.
+        :type name: str
+        """
         for element in self._stack:
             if element.name == name:
                 self._stack.remove(element)
                 break
 
     def get_surface(self, name):
+        """
+        Retrieves a surface by name.
+
+        :param name: Name of the surface.
+        :type name: str
+
+        :returns: The requested surface.
+        :rtype: pygame.Surface
+        """
         return self.get_element(name).surface
 
     def get_element(self, name):
+        """
+        Retrieves a SurfaceStackElement by name.
+
+        :param name: Name of the element.
+        :type name: str
+
+        :returns: The requested element.
+        :rtype: SurfaceStackElement:
+        """
         for element in self._stack:
             if element.name == name:
                 return element
 
     def draw(self, core):
+        """
+        Draws all surfaces in the stack.
+
+        :param core: Reference to the Core instance for rendering.
+        :type core: Core
+        """
         counter = 0
         for element in self._stack:
             # print("Draw {} at {} by {}/{}]".format(element.name, element.surface_render_position, counter, len(self.stack)-1))
@@ -206,10 +367,25 @@ class SurfaceStack:
             counter = counter + 1
 
     def print(self):
+        """
+        Prints information about all surfaces in the stack.
+        """
         for element in self._stack:
             element.print()
 
 class Core:
+    """
+    Main game framework for managing the game loop, rendering, and engines.
+
+    :var window_size: (X,Y) Dimensions of the game window.
+    :type window_size: tuple
+    :var background_color: Background color of the game window.
+    :type background_color: tuple
+    :var is_running: Indicates if the game is running.
+    :type is_running: bool
+    :var locked_fps: Target frames per second for the game loop.
+    :type locked_fps: int
+    """
 
     @property
     def window_size(self):
@@ -223,7 +399,7 @@ class Core:
         self._window_size = value
 
     def __init__(self,
-            title='GameCore',
+            title='GameCore <3',
             size=(480, 480),
             update=None,
             start=None,
@@ -233,6 +409,31 @@ class Core:
             display=0,
             window_flags=pygame.DOUBLEBUF,
             window_depth=32):
+
+        """
+        Initializes the Core framework.
+
+        :param title: Title of the game window.
+        :type title: str
+        :param size: Dimensions of the game window.
+        :type size: tuple
+        :param update: Update function for the game loop.
+        :type update: callable
+        :param start: Start function executed at the beginning.
+        :type start: callable
+        :param fixed_update: Function executed at fixed intervals.
+        :type fixed_update: callable
+        :param background_color: Background color of the window.
+        :type background_color: tuple
+        :param fps: Target frames per second.
+        :type fps: int
+        :param display: Display index for the game window.
+        :type display: int
+        :param window_flags: Pygame flags for the window.
+        :type window_flags: int
+        :param window_depth: Bit depth for the window.
+        :type window_depth: int
+        """
 
         # private properties
         self._update_func = update
@@ -338,21 +539,57 @@ class Core:
         sys.exit()
 
     def get_layer_surface(self, name):
+        """
+        Retrieves the surface associated with a specific layer by its name.
+
+        :param name: The name of the layer whose surface is to be retrieved.
+        :type name: str
+        :return: The surface object of the specified layer.
+        :rtype: pygame.Surface
+        """
         return self._surface_stack.get_surface(name)
 
     def remove_layer_surface(self, name):
+        """
+        Removes a layer and its associated surface by name.
+
+        :param name: The name of the layer to remove.
+        :type name: str
+        """
         self._surface_stack.remove_element(name)
 
     def move_layer_surface(self, name, position):
         """
-        move existing layer surface
+        Updates the position of an existing layer's surface.
+
+        :param name: The name of the layer whose surface position is to be updated.
+        :type name: str
+        :param position: The new top-left position of the surface in (x, y) coordinates.
+        :type position: tuple[int, int]
         """
         self._surface_stack.get_element(name).surface_render_position = position
 
     def create_layer_surface(self, name=None, width=0, height=0, x=0, y=0, render_layer: int = 0, fill_after_draw=True):
         """
-        create auto draw surface with own render position
-        :return Surface:
+        Creates a new rendering layer surface.
+
+        :param name: Name of the surface.
+        :type name: str
+        :param width: Width of the surface.
+        :type width: int
+        :param height: Height of the surface.
+        :type height: int
+        :param x: X-coordinate of the surface.
+        :type x: int
+        :param y: Y-coordinate of the surface.
+        :type y: int
+        :param render_layer: Rendering order of the surface.
+        :type render_layer: int
+        :param fill_after_draw: Auto-fill the surface after drawing.
+        :type fill_after_draw: bool
+
+        :returns: The created surface.
+        :rtype: pygame.Surface
         """
         if width == 0:
             width = self.window_size[0]
@@ -368,8 +605,13 @@ class Core:
 
     def create_surface(self, size=None):
         """
-        create a surface
-        :return Surface:
+        Creates a new surface with specified dimensions.
+
+        :param size: The size of the surface as a (width, height) tuple.
+                     Defaults to the size of the main window if not specified.
+        :type size: tuple[int, int], optional
+        :return: A new surface object with the specified or default size.
+        :rtype: pygame.Surface
         """
         if size is None:
             size = self.window_size
@@ -378,9 +620,13 @@ class Core:
 
     def draw_surface(self, surface, position=None):
         """
-        manually draw surface
-        :param surface: position = topleft
-        :return:
+        Draws a surface onto the main window at a specified position.
+
+        :param surface: The surface to draw.
+        :type surface: pygame.Surface
+        :param position: The top-left position where the surface will be drawn,
+                         specified as a (x, y) tuple. Defaults to (0, 0).
+        :type position: tuple[int, int], optional
         """
         if position is None:
             position = (0, 0)
@@ -388,9 +634,13 @@ class Core:
 
     def get_engine_by_class(self, searchClass):
         """
-        find one engine by class type
-        :param searchClass:
-        :return engine or null:
+        Finds and returns the first engine of a specific class type.
+
+        :param searchClass: The class type of the engine to search for.
+        :type searchClass: type
+        :return: The first engine instance matching the specified class type, or None if no match is found.
+        :rtype: Engine or None
+        :raises TypeError: If the provided `searchClass` is not a class.
         """
         if inspect.isclass(searchClass):
             for engine in self._engines:
@@ -402,9 +652,13 @@ class Core:
 
     def get_engines_by_class(self, searchClass):
         """
-        get all engines from class type
-        :param searchClass:
-        :return list or empty list:
+        Retrieves all engines of a specific class type.
+
+        :param searchClass: The class type of engines to search for.
+        :type searchClass: type
+        :return: A list of all engines matching the specified class type.
+        :rtype: list[Engine]
+        :raises TypeError: If the provided `searchClass` is not a class.
         """
         engine_list = []
         if inspect.isclass(searchClass):
@@ -415,15 +669,24 @@ class Core:
             raise Exception("value must be a class")
         return engine_list
 
-    def instantiate(self, engine):
+    def instantiate(self, engine, **kwargs):
         """
-        create engine while runtime
-        :param engine:
-        :return engine clone:
+        Creates and initializes a new instance of an engine class at runtime.
+        This method is particularly suitable for creating **prefabs**, which are reusable templates for engines.
+
+        :param engine: The engine class to instantiate. Must be a subclass of `Engine`.
+        :type engine: type
+        :param kwargs: Optional parameters to pass to the engine's `awake` method.
+        :return: The instantiated and initialized engine instance.
+        :rtype: Engine
+        :raises TypeError: If the provided `engine` is not a subclass of `Engine`.
         """
         if issubclass(engine, Engine):
             e = engine(self)
-            e.awake()
+            if len(kwargs.items()) > 0:
+                e.awake(**kwargs)
+            else:
+                e.awake()
             if e.is_enabled:
                 e.start()
                 e._is_started = True
@@ -435,6 +698,13 @@ class Core:
 
 
     def destroy(self, engine):
+        """
+        Destroys an engine instance and removes it from the list of active engines.
+
+        :param engine: The engine instance to destroy.
+        :type engine: Engine
+        :raises TypeError: If the provided `engine` is not an instance of `Engine`.
+        """
         if isinstance(engine, Engine):
             for e in self._engines:
                 if id(e) == id(engine):
