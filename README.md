@@ -31,7 +31,7 @@ A lightweight Python library designed to streamline the development of 2D games.
 ## Installation
 
 ```bash
-pip install git+https://github.com/NiklasDerEchte/GameCore.git@maste
+pip install git+https://github.com/NiklasDerEchte/GameCore.git@master
 ```
 
 ---
