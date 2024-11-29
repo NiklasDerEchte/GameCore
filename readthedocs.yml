@@ -1,9 +1,12 @@
-# .readthedocs.yml
+version: 2
 
 build:
-  image: latest
+  os: ubuntu-24.04
+
+  tools:
+
+    python: "3.6"
 
 python:
-  version: 3.5
-
-requirements_file: requirements.txt
+  install:
+    - requirements: requirements.txt
