@@ -3,7 +3,3 @@ perlin-noise
 bridson
 numpy
 pytmx
-
-# for docs
-sphinx
-sphinx-rtd-theme
