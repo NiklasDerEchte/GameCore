@@ -30,6 +30,7 @@ Examples
 
    getting-started/requirements
    getting-started/external-tools
+   getting-started/basics
    getting-started/how-to-use
 
 .. toctree::

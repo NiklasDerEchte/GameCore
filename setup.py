@@ -2,7 +2,14 @@ from setuptools import setup, find_packages
 
 def parse_requirements(filename):
     with open(filename, "r") as file:
-        return [line.strip() for line in file if line.strip() and not line.startswith("#")]
+        requirements = []
+        for line in file:
+            if line.strip() and not line.startswith("#"):
+                requirements.append(line.strip())
+            else:
+                if line.strip() and "<setup-skip>" in line.strip():
+                    return requirements
+        return requirements
 
 setup(
     name="GameCore",
