@@ -6,11 +6,6 @@
 html_title = "GameCore"
 html_short_title = "GameCore"
 
-html_meta = {
-    "google-site-verification": "I2IxJ6FXf5yD7T1OcSDMVSXwIqEZ0Aj2rHD70owkVGU"
-}
-
-
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
