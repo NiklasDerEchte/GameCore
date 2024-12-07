@@ -34,3 +34,33 @@ Code-Reference
     :members:
     :inherited-members:
     :special-members:
+
+.. autoclass:: core.sprite.SizeSlicer
+    :members:
+    :inherited-members:
+    :special-members:
+
+.. autoclass:: core.sprite.AmountSlicer
+    :members:
+    :inherited-members:
+    :special-members:
+
+.. autoclass:: core.sprite.SimpleSprite
+    :members:
+    :inherited-members:
+    :special-members:
+
+.. autoclass:: core.sprite.SimpleImageSprite
+    :members:
+    :inherited-members:
+    :special-members:
+
+.. autoclass:: core.sprite.SimpleSpriteAnimator
+    :members:
+    :inherited-members:
+    :special-members:
+
+.. autoclass:: core.sprite.SpriteDirectoryAnimation
+    :members:
+    :inherited-members:
+    :special-members:
