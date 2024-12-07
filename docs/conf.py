@@ -19,6 +19,7 @@ author = 'Niklas Wockenfuß'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.mathjax',
+    'sphinx_copybutton'
 ]
 
 templates_path = ['_templates']
@@ -27,7 +28,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # -- autodoc config
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../core'))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
 autodoc_mock_imports = ["pygame", "perlin-noise", "bridson", "numpy", "pytmx"]
 autodoc_member_order = 'bysource'
 

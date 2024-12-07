@@ -29,3 +29,8 @@ Code-Reference
     :members:
     :inherited-members:
     :special-members:
+
+.. autoclass:: core.sprite.Slicer
+    :members:
+    :inherited-members:
+    :special-members:

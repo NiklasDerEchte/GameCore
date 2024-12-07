@@ -1,7 +1,5 @@
 import queue
 import math
-
-
 class NodePath:
     def __init__(self, path):
         self._path = []

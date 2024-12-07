@@ -17,11 +17,11 @@ class Coroutine:
 
         :param func: The function to execute periodically. The function can update the 'interval', 'func_args', and 'func_kwargs' by returning them in a dictionary.
         :type func: callable
-        :param interval: The time interval (in seconds) between executions.
+        :param interval: The time interval (in milliseconds) between executions.
         :type interval: float
         :param loop_condition: A function returning a boolean that determines if the coroutine should continue.
         :type loop_condition: callable
-        :param call_delay: Initial delay before the first execution.
+        :param call_delay: Initial delay before the first execution (in milliseconds).
         :type call_delay: float
         :param func_args: Positional arguments to pass to `func`.
         :type func_args: tuple
@@ -370,6 +370,8 @@ class Core:
     """
     Main game framework for managing the game loop, rendering, and engines.
 
+    :var window: main draw surface.
+    :type window: pygame.Surface
     :var window_size: (X,Y) Dimensions of the game window.
     :type window_size: tuple
     :var background_color: Background color of the game window.

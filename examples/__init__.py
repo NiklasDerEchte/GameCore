@@ -1,10 +1,14 @@
+from config import *
+
 # examples
-from examples.geo_drawer import *
-from examples.snowflake_effect import *
-from examples.map_gen import *
-from examples.debug_fps import *
-from examples.projection import *
-from examples.ai_town import *
-from examples.ai_simulation import *
-from examples.spaceship import *
-from examples.grid import *
+from .geo_drawer import *
+from .snowflake_effect import *
+from .map_gen import *
+from .debug_fps import *
+from .projection import *
+from .ai_town import *
+from .ai_simulation import *
+from .spaceship import *
+from .grid import *
+from .screen_blink import *
+from .draw_system import *

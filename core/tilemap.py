@@ -1,5 +1,6 @@
-import os
+import pytmx
 from core.core import *
+
 class TileMap:
     def __init__(self, filename):
         self.tmxdata = pytmx.load_pygame(filename, pixelalpha=True)
@@ -73,12 +74,17 @@ class TileMapDrawer(Engine, Prefab):
         self.is_enabled = False
         self.priority_layer = -2
         self.tile_map_path = None
+        self._draw_surface = None
 
     def on_enable(self, inject=None):
         if inject is None:
             return
         if 'tile_map_path' in inject:
             self.tile_map_path = inject['tile_map_path']
+        if 'surface' in inject:
+            self._draw_surface = inject['surface']
+        else:
+            self._draw_surface = self.core.window
 
     def start(self):
         if self.tile_map_path is None:
@@ -128,7 +134,7 @@ class TileMapDrawer(Engine, Prefab):
                     gid = animated_tile['animated_tiles'][animated_tile['active_animation_index']].gid
                     self.map.blit(self.tile_map.tmxdata.get_tile_image_by_gid(gid), animated_tile['grid_pos'])
 
-        self.core.window.blit(self.map, self.camera.apply(self.map.get_rect()))
+        self._draw_surface.blit(self.map, self.camera.apply(self.map.get_rect()))
 
     def get_camera(self):
         return self.camera

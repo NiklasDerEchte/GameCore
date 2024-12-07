@@ -3,6 +3,10 @@ Tilemap 2D
 
 The ``TileMap`` class is responsible for loading a ``.tmx`` file, which contains the information about the tileset and the map made of these tiles. It uses the ``pytmx`` library to load the ``.tmx`` file and render the tiles onto a surface. It also supports animated tiles. The ``make_map()`` method returns the rendered map surface and a list of animated tiles with their position and frames.
 
+.. hint::
+
+   You can easily edit `.tmx` tilemap files using the `Tiled <https://www.mapeditor.org/>`__ map editor.
+
 Camera
 ^^^^^^
 

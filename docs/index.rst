@@ -31,7 +31,7 @@ Examples
    :caption: Getting Started
    :glob:
 
-   getting-started/requirements
+   getting-started/installation
    getting-started/external-tools
    getting-started/basics
    getting-started/how-to-use

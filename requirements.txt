@@ -7,3 +7,4 @@ pytmx
 # <setup-skip> for docs
 sphinx
 sphinx-rtd-theme
+sphinx-copybutton

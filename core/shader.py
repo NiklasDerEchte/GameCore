@@ -1,7 +1,6 @@
-import random
 
+import math
 import pygame.draw
-
 from core.core import *
 
 class Fog(Engine, Prefab):
