@@ -13,7 +13,7 @@ def parse_requirements(filename):
 
 setup(
     name="GameCore",
-    version="0.1.5.2",
+    version="1.5.2",
     description="GameCore is a nice runtime structure for pygame ",
     long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
