@@ -36,11 +36,11 @@ TileMapDrawer
 Examples
 ^^^^^^^^
 
-`Spaceship <https://github.com/NiklasDerEchte/GameCore/blob/master/examples/spaceship.py>`_
--------------------------------------------------------------------------------------------
+`Spaceship <https://github.com/NiklasDerEchte/GameCore/blob/master/game_core/examples/spaceship.py>`_
+-----------------------------------------------------------------------------------------------------
 
 .. image:: ../_images/spaceship-example.png
    :alt: spaceship example image
    :scale: 100%
 
-`code <https://github.com/NiklasDerEchte/GameCore/blob/master/examples/spaceship.py>`__
+`code <https://github.com/NiklasDerEchte/GameCore/blob/master/game_core/examples/spaceship.py>`__

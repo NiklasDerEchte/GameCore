@@ -45,7 +45,7 @@ The ``Coroutine`` class is a helper class that provides a way to execute a funct
     Output: 5x Hello World#
 
 The ``ScreenBlink`` class demonstrates the integration of a coroutine to create a dynamic screen-blinking effect by periodically changing the background color.
-The ``ScreenBlink`` class can also be easily tested using ``preview.py``.
+The ``ScreenBlink`` class can also be easily tested using `preview.py <https://github.com/NiklasDerEchte/GameCore/blob/master/preview.py>`__.
 
 .. code:: python
 

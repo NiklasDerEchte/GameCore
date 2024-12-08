@@ -14,6 +14,8 @@ This project is a `Python <https://docs.python.org/>`_ game engine that uses `Py
 Examples
 ^^^^^^^^
 
+All examples can be found in `preview.py <https://github.com/NiklasDerEchte/GameCore/blob/master/preview.py>`__
+
 .. image:: _images/spaceship-example.png
    :alt: spaceship image
    :scale: 100%
