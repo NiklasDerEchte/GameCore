@@ -1,4 +1,4 @@
-from core.core import *
+from .core import *
 from core.math import *
 
 class NavAgent:
