@@ -23,6 +23,7 @@ setup(
     classifiers=[
         "Programming Language :: Python :: 3",
     ],
+    include_package_data=True,
     python_requires=">=3.5",
     install_requires=parse_requirements("requirements.txt"),
 )
