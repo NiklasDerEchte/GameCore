@@ -8,9 +8,9 @@ v1.5.2 - v1.5.3
 ---------------
 
 **Bug fixes**
-- Structure changed for fixing pip installation
-- Code-Reference sprite docu update
-- Imports fixed
+* Structure changed for fixing pip installation
+* Code-Reference sprite docu update
+* Imports fixed
 
 v1.5.1 - v1.5.2
 ---------------
