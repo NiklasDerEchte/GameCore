@@ -1,5 +1,5 @@
 from .core import *
-from core.math import *
+from .math import *
 
 class NavAgent:
     def __init__(self, position, speed=1):
