@@ -1,5 +1,7 @@
 
 import math
+import random
+
 import pygame.draw
 from core.core import *
 
@@ -21,32 +23,23 @@ class Fog(Engine, Prefab):
 
 class Lines(Engine, Prefab):
     def awake(self):
-        self.priority_layer = 10
+        self.priority_layer = 80
         self.is_enabled = False
-
-        self.width = self.core.window_size[0]
-        self.height = self.core.window_size[1]
-
-    def on_enable(self, inject=None):
-        if inject != None:
-            if 'width' in inject:
-                self.width = inject['width']
-            if 'height' in inject:
-                self.height = inject['height']
 
     def start(self):
         self.stripes = []
-        self.surface = pygame.surface.Surface((self.width, self.height), pygame.SRCALPHA, 32).convert_alpha()
+        self.surface = self.core.create_layer_surface("_Lines#{}".format(random.randrange(0, 999999, 1)))
         self.origin = (0,0)
         self.coroutines = [
             Coroutine(func=self.create_stripe_coroutine)
         ]
+        self.width = self.surface.get_rect().width
+        self.height = self.surface.get_rect().height
 
     def update(self):
         self.update_stripe()
         self.draw()
-        self.core.window.blit(self.surface, self.origin)
-        self.surface.fill(self.core.background_color)
+        self.core.draw_surface(self.surface)
 
     def draw(self):
         for stripe in self.stripes:

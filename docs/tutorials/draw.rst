@@ -62,7 +62,7 @@ To start, create a system to draw a simple blue box on the screen. The box will 
 
 .. code:: python
 
-    from core import *
+    from game_core.core import *
 
     class DrawSystem(Engine, Prefab):
         """

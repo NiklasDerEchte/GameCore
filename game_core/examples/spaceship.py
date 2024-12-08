@@ -1,4 +1,6 @@
-from core import *
+import os.path
+
+from game_core.core import *
 
 
 class Spaceship(Engine, Prefab):
@@ -51,13 +53,13 @@ class Spaceship(Engine, Prefab):
         # init tilemap
         self.tile_map_drawer = self.core.instantiate(TileMapDrawer)
         self.tile_map_drawer.enable(
-            tile_map_path=os.getcwd() + "/examples/assets/space.tmx",
+            tile_map_path=os.path.join(LIB_DIR, "examples/assets/space.tmx"),
             surface=self.tile_map_surface
         )
 
         # init shader
         self.line_effect = self.core.instantiate(Lines)
-        self.line_effect.enable(width=self.tile_map_drawer.get_size()[0], height=self.tile_map_drawer.get_size()[1])
+        self.line_effect.enable()
 
         # set camera and initial spaceship position
         self.camera = self.tile_map_drawer.get_camera()
@@ -73,7 +75,7 @@ class Spaceship(Engine, Prefab):
             render_layer=1,
             fill_after_draw=True
         )
-        self.simple_image_sprite = SimpleImageSprite("/examples/assets/sprites/Spaceship/sprite_0.png")
+        self.simple_image_sprite = SimpleImageSprite(os.path.join(LIB_DIR, "examples/assets/sprites/Spaceship/sprite_0.png"))
 
     def update(self):
         """

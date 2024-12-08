@@ -1,4 +1,4 @@
-from config import *
+from game_core.config import *
 
 # examples
 from .geo_drawer import *

@@ -1,4 +1,4 @@
-from config import *
+from game_core.config import *
 
 # core
 from .core import *

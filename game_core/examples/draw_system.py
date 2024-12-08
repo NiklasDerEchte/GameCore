@@ -1,4 +1,4 @@
-from core import *
+from game_core.core import *
 
 class DrawSystem(Engine, Prefab):
     def start(self):

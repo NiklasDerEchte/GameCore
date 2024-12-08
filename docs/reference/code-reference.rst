@@ -1,66 +1,66 @@
 Code-Reference
 ==============
 
-.. autoclass:: core.Core
+.. autoclass:: game_core.core.Core
     :members:
     :special-members:
 
-.. autoclass:: core.Coroutine
-    :members:
-    :inherited-members:
-    :special-members:
-
-.. autoclass:: core.Engine
+.. autoclass:: game_core.core.Coroutine
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: core.Prefab
+.. autoclass:: game_core.core.Engine
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: core.SurfaceStack
+.. autoclass:: game_core.core.Prefab
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: core.SurfaceStackElement
+.. autoclass:: game_core.core.SurfaceStack
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: core.sprite.Slicer
+.. autoclass:: game_core.core.SurfaceStackElement
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: core.sprite.SizeSlicer
+.. autoclass:: game_core.core.sprite.Slicer
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: core.sprite.AmountSlicer
+.. autoclass:: game_core.core.sprite.SizeSlicer
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: core.sprite.SimpleSprite
+.. autoclass:: game_core.core.sprite.AmountSlicer
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: core.sprite.SimpleImageSprite
+.. autoclass:: game_core.core.sprite.SimpleSprite
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: core.sprite.SimpleSpriteAnimator
+.. autoclass:: game_core.core.sprite.SimpleImageSprite
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: core.sprite.SpriteDirectoryAnimation
+.. autoclass:: game_core.core.sprite.SimpleSpriteAnimator
+    :members:
+    :inherited-members:
+    :special-members:
+
+.. autoclass:: game_core.core.sprite.SpriteDirectoryAnimation
     :members:
     :inherited-members:
     :special-members:

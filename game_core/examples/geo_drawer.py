@@ -1,4 +1,4 @@
-from core import *
+from game_core.core import *
 class GeoDrawer(Engine, Prefab):
 
     def awake(self):

@@ -1,4 +1,4 @@
-from examples import *
+from game_core import *
 
 class PreviewModule(Engine):
     def start(self):
@@ -18,6 +18,6 @@ class PreviewModule(Engine):
         # self.core.instantiate(DrawSystemAnimationImage)
         # self.core.instantiate(DrawSystemAnimationImageSliced)
         # self.core.instantiate(DrawSystemAnimationImageSlicedWithPaddings)
-        self.core.instantiate(DrawSystemDirectoryAnimationImageSliced)
+        # self.core.instantiate(DrawSystemDirectoryAnimationImageSliced)
 
 Core(background_color=(255, 255, 255, 0), fps=120)

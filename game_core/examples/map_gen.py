@@ -1,4 +1,5 @@
-from core import *
+from perlin_noise import PerlinNoise
+from game_core.core import *
 
 class MagGen(Engine, Prefab):
 

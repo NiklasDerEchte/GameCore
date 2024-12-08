@@ -17,7 +17,7 @@ TileMapDrawer
 
 .. code-block:: python
 
-    from core import *
+    from game_core.core import *
 
     class MyEngine(Engine):
 

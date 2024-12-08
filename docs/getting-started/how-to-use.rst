@@ -21,7 +21,7 @@ Here is an example of how you can use the engine to create a simple game loop:
 
 .. code-block:: python
 
-    from core import *
+    from game_core.core import *
 
     def start(core): # <- here u get the core object
         # initialize game objects here
@@ -50,7 +50,7 @@ To create your own engine, you can simply inherit from the ``Engine`` class and 
 
 .. code-block:: python
 
-    from core import *
+    from game_core.core import *
 
     class MyEngine(Engine):
         def start(self):
@@ -68,7 +68,7 @@ The lifecycle can be completely controlled and engines created dynamically via t
 
 .. code-block:: python
 
-    from core import *
+    from game_core.core import *
 
     class MyPrefab(Engine, Prefab):
         def start(self):
@@ -92,7 +92,7 @@ enable / disable Engine
 
 .. code-block:: python
 
-    from core import *
+    from game_core.core import *
 
     class MyPrefab(Engine, Prefab):
         def awake(self): # set pre configs
@@ -149,7 +149,7 @@ destroy Engine
 
 .. code-block:: python
 
-    from core import *
+    from game_core.core import *
 
     class MyEngine(Engine):
         def start(self):

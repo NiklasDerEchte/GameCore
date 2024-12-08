@@ -1,4 +1,6 @@
-from core import *
+import numpy as np
+
+from game_core.core import *
 
 class Projection(Engine, Prefab):
 

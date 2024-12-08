@@ -5,7 +5,7 @@ The ``Coroutine`` class is a helper class that provides a way to execute a funct
 
 .. code:: python
 
-    from core import *
+    from game_core.core import *
 
     class FooBar(Engine):
         """
@@ -49,7 +49,7 @@ The ``ScreenBlink`` class can also be easily tested using ``preview.py``.
 
 .. code:: python
 
-    from core import *
+    from game_core.core import *
 
     class ScreenBlink(Engine, Prefab):
         """
