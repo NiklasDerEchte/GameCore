@@ -1,0 +1,2 @@
+recursive-include game_core/core/assets *
+recursive-include game_core/examples/assets *
