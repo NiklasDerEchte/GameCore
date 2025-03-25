@@ -12,6 +12,7 @@ class PreviewModule(Engine):
         # self.core.instantiate(AiSimulationSpawner)
         # self.core.instantiate(Spaceship)
         # self.core.instantiate(GridView, grid_size=self.core.window_size)
+        self.core.instantiate(GridNavigation, grid_size=self.core.window_size)
         # self.core.instantiate(ScreenBlink)
         # self.core.instantiate(DrawSystem)
         # self.core.instantiate(DrawSystemImage)

@@ -4,6 +4,21 @@ Changelog
 v1.5
 ^^^^
 
+v1.5.3 - v1.5.4
+---------------
+
+**New**
+
+* Added new example ``grid_navigation.py``
+
+**Documentation and structure update**
+
+* Added ``Navigation`` section -> ``GridNavigation`` and ``NavAgent``
+
+**Bug fixes**
+
+* Fixed ``a_star.py`` ``get_path()`` method. ``open_nodes`` and ``closed_nodes`` are now resetted after each call
+
 v1.5.2 - v1.5.3
 ---------------
 

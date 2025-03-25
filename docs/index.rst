@@ -10,6 +10,7 @@ GameCore documentation
 ======================
 
 This project is a `Python <https://docs.python.org/>`_ game engine that uses `PyGame <https://www.pygame.org/docs/>`_ library to provide a game loop, input handling, and game object management.
+`GitHub <https://github.com/NiklasDerEchte/GameCore>`__
 
 Examples
 ^^^^^^^^

@@ -11,7 +11,7 @@ pip
 Download sources
 ^^^^^^^^^^^^^^^^
 
-* Download master from `GitHub <https://github.com/NiklasDerEchte/GameCore>`_ or get specific `releases <https://github.com/NiklasDerEchte/GameCore/releases>`_
+* Download master from `GitHub <https://github.com/NiklasDerEchte/GameCore>`__ or get specific `releases <https://github.com/NiklasDerEchte/GameCore/releases>`__
 
 Requirements
 ------------

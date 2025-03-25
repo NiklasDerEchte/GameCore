@@ -20,6 +20,21 @@ Code-Reference
     :inherited-members:
     :special-members:
 
+.. autoclass:: game_core.core.Grid
+    :members:
+    :inherited-members:
+    :special-members:
+
+.. autoclass:: game_core.core.Node
+    :members:
+    :inherited-members:
+    :special-members:
+
+.. autoclass:: game_core.core.NodePath
+    :members:
+    :inherited-members:
+    :special-members:
+
 .. autoclass:: game_core.core.SurfaceStack
     :members:
     :inherited-members:
