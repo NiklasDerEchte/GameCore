@@ -1,5 +1,5 @@
 import pytmx
-from .core import *
+from .core.core import *
 
 class TileMap:
     def __init__(self, filename):

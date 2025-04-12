@@ -1,4 +1,4 @@
-from game_core.core import *
+from game_core.src import *
 
 class SnowflakeEffect(Engine, Prefab):
     def awake(self):

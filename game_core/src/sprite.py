@@ -1,4 +1,4 @@
-from .core import *
+from .core.core import *
 import os
 
 ####################

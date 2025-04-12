@@ -1,4 +1,4 @@
-from game_core.core import *
+from game_core.src import *
 
 class Field:
     def __init__(self, grid_position, size, margin, is_wall=False):

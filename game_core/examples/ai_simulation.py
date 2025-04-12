@@ -1,4 +1,4 @@
-from game_core.core import *
+from game_core.src import *
 
 #######################################
 # implements also the NavAgent module #

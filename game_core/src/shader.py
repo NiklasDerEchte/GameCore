@@ -2,7 +2,7 @@
 import math
 import random
 import pygame.draw
-from .core import *
+from .core.core import *
 
 class Fog(Engine, Prefab):
     def awake(self):
