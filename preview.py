@@ -22,3 +22,8 @@ class PreviewModule(Engine):
         # self.core.instantiate(DrawSystemDirectoryAnimationImageSliced)
 
 Core(background_color=(255, 255, 255, 0), fps=120)
+
+# ToDo
+# - SceneManager schould manage the engine lifecycle
+# - Coroutines should be made easier to control
+# - Powder Simulation

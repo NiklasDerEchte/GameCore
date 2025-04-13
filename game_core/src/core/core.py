@@ -1,13 +1,13 @@
 import sys
 import random
 import pygame
-import inspect
 import string
 
 from .coroutine import Coroutine
 from .engine import Engine
 from .surface_stack import SurfaceStack, SurfaceStackElement
 from .prefab import Prefab
+from .scene_manager import SceneManager, Scene, scene
 
 class Core:
     """
@@ -38,10 +38,8 @@ class Core:
 
     def __init__(self,
             title='GameCore <3',
+            start_scene=None,
             size=(480, 480),
-            update=None,
-            start=None,
-            fixed_update=None,
             background_color=(0,0,0,0),
             fps=30,
             display=0,
@@ -55,12 +53,6 @@ class Core:
         :type title: str
         :param size: Dimensions of the game window.
         :type size: tuple
-        :param update: Update function for the game loop.
-        :type update: callable
-        :param start: Start function executed at the beginning.
-        :type start: callable
-        :param fixed_update: Function executed at fixed intervals.
-        :type fixed_update: callable
         :param background_color: Background color of the window.
         :type background_color: tuple
         :param fps: Target frames per second.
@@ -74,16 +66,14 @@ class Core:
         """
 
         # private properties
-        self._update_func = update
-        self._start_func = start
-        self._fixed_update_func = fixed_update
         self._fixed_update_interval_counter = 0
-        self._engines = []
+        self._scene_manager = SceneManager()
         self._display = display
         self._flags = window_flags
         self._depth = window_depth
         self._window_size = None
         self._surface_stack = SurfaceStack()
+        self._start_scene = start_scene
 
         # config able properties
         self.window = None
@@ -110,12 +100,23 @@ class Core:
         for engine_class in Engine.__subclasses__():
             if not Prefab in engine_class.__bases__:
                 e = engine_class(self)  # init new engine class
-                self._engines.append(e)
+    
+    def get_scene_manager(self):
+        """
+        Retrieves the SceneManager instance.
 
-
+        :returns: The SceneManager instance.
+        :rtype: SceneManager
+        """
+        return self._scene_manager
+    
     def _key_listener(self):
-         self.events = pygame.event.get()
-         for key in self.events:
+        # TODO
+        # mouse_pos = pygame.mouse.get_pos()
+        # mouse_buttons = pygame.mouse.get_pressed()
+        # keys = pygame.key.get_pressed()
+        self.events = pygame.event.get()
+        for key in self.events:
             if key.type == pygame.QUIT:
                 self.is_running = False
 
@@ -125,49 +126,15 @@ class Core:
         self.elapsed_time_seconds = self.elapsed_delta_time / 1000 # ms to s
         self._fixed_update_interval_counter = self._fixed_update_interval_counter + self.delta_time
 
-    def _call_awake_func(self):
-        if len(self._engines) > 0:
-            for engine in self._engines:
-                 engine.awake()
-
-    def _call_start_func(self):
-        if self._start_func != None:
-            self._start_func(self)
-        if len(self._engines) > 0:
-            for engine in self._engines:
-                if engine.is_enabled and not engine._is_started:
-                    engine.start()
-                    engine._is_started = True
-
-    def _call_update_func(self):
-        if self._update_func != None:
-            self._update_func()
-        if len(self._engines) > 0:
-            for engine in self._engines:
-                if engine.is_enabled:
-                    engine.update()
-                    engine._check_dead_jobs()
-                    engine._update_jobs()
-
-    def _call_fixed_update_func(self):
-        if self._fixed_update_func != None:
-            self._fixed_update_func()
-        if len(self._engines) > 0:
-            for engine in self._engines:
-                if engine.is_enabled:
-                    engine.fixed_update()
-
     def _game_loop(self):
-        self._call_awake_func()
-        self._engines = sorted(self._engines, key=lambda x: x.priority_layer, reverse=False)
-        self._call_start_func()
+        self.get_scene_manager().set_scene(self._start_scene)
         while self.is_running:
             self.window.fill(self.background_color)
             self._key_listener()
-            self._call_update_func()
+            self.get_scene_manager().scene()._update()
             if self._fixed_update_interval_counter >= self.fixed_update_interval:
                 self._fixed_update_interval_counter = self._fixed_update_interval_counter - self.fixed_update_interval #add rest of interval_counter back
-                self._call_fixed_update_func()
+                self.get_scene_manager().scene()._fixed_update()
             self._surface_stack.draw(self)
             self.fps = round(self.clock.get_fps(), 2)
             pygame.display.update()
@@ -270,43 +237,6 @@ class Core:
             position = (0, 0)
         self.window.blit(surface, position)
 
-    def get_engine_by_class(self, searchClass):
-        """
-        Finds and returns the first engine of a specific class type.
-
-        :param searchClass: The class type of the engine to search for.
-        :type searchClass: type
-        :return: The first engine instance matching the specified class type, or None if no match is found.
-        :rtype: Engine or None
-        :raises TypeError: If the provided `searchClass` is not a class.
-        """
-        if inspect.isclass(searchClass):
-            for engine in self._engines:
-                if engine.__class__.__name__ == searchClass.__name__:
-                    return engine
-        else:
-            raise Exception("value must be a class")
-        return None
-
-    def get_engines_by_class(self, searchClass):
-        """
-        Retrieves all engines of a specific class type.
-
-        :param searchClass: The class type of engines to search for.
-        :type searchClass: type
-        :return: A list of all engines matching the specified class type.
-        :rtype: list[Engine]
-        :raises TypeError: If the provided `searchClass` is not a class.
-        """
-        engine_list = []
-        if inspect.isclass(searchClass):
-            for engine in self._engines:
-                if engine.__class__.__name__ == searchClass.__name__:
-                    engine_list.append(engine)
-        else:
-            raise Exception("value must be a class")
-        return engine_list
-
     def instantiate(self, engine, **kwargs):
         """
         Creates and initializes a new instance of an engine class at runtime.
@@ -319,19 +249,8 @@ class Core:
         :rtype: Engine
         :raises TypeError: If the provided `engine` is not a subclass of `Engine`.
         """
-        if issubclass(engine, Engine):
-            e = engine(self)
-            if len(kwargs.items()) > 0:
-                e.awake(**kwargs)
-            else:
-                e.awake()
-            if e.is_enabled:
-                e.start()
-                e._is_started = True
-
-            self._engines.append(e)
-            self._engines = sorted(self._engines, key=lambda x: x.priority_layer, reverse=False)
-            return e
+        if isinstance(engine, Engine):    
+            return self.get_scene_manager().scene().instantiate_engine(engine)
         return None
 
 
@@ -344,8 +263,4 @@ class Core:
         :raises TypeError: If the provided `engine` is not an instance of `Engine`.
         """
         if isinstance(engine, Engine):
-            for e in self._engines:
-                if id(e) == id(engine):
-                    e.on_destroy()
-                    self._engines.remove(e)
-                    del e
+            self.get_scene_manager().scene().destroy_engine(engine)
