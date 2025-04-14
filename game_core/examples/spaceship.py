@@ -3,7 +3,7 @@ import os.path
 from game_core.src import *
 
 
-class Spaceship(Engine, Prefab):
+class SpaceshipPrefab(Engine):
     """
     A class representing a spaceship in a 2D game. It handles the spaceship's movement,
     tile map rendering, camera control, and visual effects using shaders.
@@ -11,8 +11,8 @@ class Spaceship(Engine, Prefab):
     Attributes:
         priority_layer (int): The priority layer for rendering.
         tile_map_surface (Surface): The surface used for rendering the background tile map.
-        tile_map_drawer (TileMapDrawer): Responsible for drawing the tile map.
-        line_effect (Lines): A shader effect applied to the scene.
+        tile_map_drawer (TileMapDrawerPrefab): Responsible for drawing the tile map.
+        line_effect (LinesPrefab): A shader effect applied to the scene.
         camera (Camera): The camera that follows the spaceship's movement.
         pos (tuple): The current position of the spaceship.
         spaceship_surface (Surface): The surface used for rendering the spaceship.
@@ -33,8 +33,8 @@ class Spaceship(Engine, Prefab):
         shader effects, and camera.
 
         - Creates a tile map surface for the background.
-        - Instantiates and enables a `TileMapDrawer` to render the tile map.
-        - Initializes a `Lines` shader effect for visual enhancements.
+        - Instantiates and enables a `TileMapDrawerPrefab` to render the tile map.
+        - Initializes a `LinesPrefab` shader effect for visual enhancements.
         - Sets up the camera to follow the spaceship and positions the spaceship at the center of the screen.
         - Initializes the spaceship surface and sprite image.
         """
@@ -51,14 +51,14 @@ class Spaceship(Engine, Prefab):
         )
 
         # init tilemap
-        self.tile_map_drawer = self.core.instantiate(TileMapDrawer)
+        self.tile_map_drawer = self.core.instantiate(TileMapDrawerPrefab)
         self.tile_map_drawer.enable(
             tile_map_path=os.path.join(LIB_DIR, "examples/assets/space.tmx"),
             surface=self.tile_map_surface
         )
 
         # init shader
-        self.line_effect = self.core.instantiate(Lines)
+        self.line_effect = self.core.instantiate(LinesPrefab)
         self.line_effect.enable()
 
         # set camera and initial spaceship position

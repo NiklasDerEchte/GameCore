@@ -4,7 +4,7 @@ class PowderGame(Engine):
     def awake(self):
         # Powder Simulation erstellen
         self.sim = self.core.instantiate(
-            PowderSimulation,
+            PowderSimulationPrefab,
             width=800,
             height=600
         )

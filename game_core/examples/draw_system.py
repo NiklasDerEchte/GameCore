@@ -1,6 +1,6 @@
 from game_core.src import *
 
-class DrawSystem(Engine, Prefab):
+class DrawSystemPrefab(Engine):
     def start(self):
         size = self.core.window_size
         self.surface = self.core.create_layer_surface(
@@ -23,7 +23,7 @@ class DrawSystem(Engine, Prefab):
 
 
 
-class DrawSystemImage(Engine, Prefab):
+class DrawSystemImagePrefab(Engine):
     def start(self):
         size = self.core.window_size
         self.surface = self.core.create_layer_surface(
@@ -48,7 +48,7 @@ class DrawSystemImage(Engine, Prefab):
     def update(self):
         self.surface.blit(self.image_sprite.get_image(), self.image_sprite.get_rect())
 
-class DrawSystemAnimationImage(Engine, Prefab):
+class DrawSystemAnimationImagePrefab(Engine):
     def start(self):
         size = self.core.window_size
         self.surface = self.core.create_layer_surface(
@@ -88,7 +88,7 @@ class DrawSystemAnimationImage(Engine, Prefab):
     def anim_sate_decision(self):
         return "idle"
 
-class DrawSystemAnimationImageSliced(Engine, Prefab):
+class DrawSystemAnimationImageSlicedPrefab(Engine):
     def start(self):
         size = self.core.window_size
         self.surface = self.core.create_layer_surface(
@@ -128,7 +128,7 @@ class DrawSystemAnimationImageSliced(Engine, Prefab):
     def anim_sate_decision(self):
         return "idle"
 
-class DrawSystemAnimationImageSlicedWithPaddings(Engine, Prefab):
+class DrawSystemAnimationImageSlicedWithPaddingsPrefab(Engine):
     def start(self):
         size = self.core.window_size
         self.surface = self.core.create_layer_surface(
@@ -177,7 +177,7 @@ class DrawSystemAnimationImageSlicedWithPaddings(Engine, Prefab):
     def anim_sate_decision(self):
         return "idle"
 
-class DrawSystemDirectoryAnimationImageSliced(Engine, Prefab):
+class DrawSystemDirectoryAnimationImageSlicedPrefab(Engine):
     def start(self):
         size = self.core.window_size
         self.surface = self.core.create_layer_surface(

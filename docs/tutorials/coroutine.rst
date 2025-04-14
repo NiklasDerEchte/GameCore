@@ -44,21 +44,21 @@ The ``Coroutine`` class is a helper class that provides a way to execute a funct
 
     Output: 5x Hello World#
 
-The ``ScreenBlink`` class demonstrates the integration of a coroutine to create a dynamic screen-blinking effect by periodically changing the background color.
-The ``ScreenBlink`` class can also be easily tested using `preview.py <https://github.com/NiklasDerEchte/GameCore/blob/master/preview.py>`__.
+The ``ScreenBlinkPrefab`` class demonstrates the integration of a coroutine to create a dynamic screen-blinking effect by periodically changing the background color.
+The ``ScreenBlinkPrefab`` class can also be easily tested using `preview.py <https://github.com/NiklasDerEchte/GameCore/blob/master/preview.py>`__.
 
 .. code:: python
 
     from game_core.core import *
 
-    class ScreenBlink(Engine, Prefab):
+    class ScreenBlinkPrefab(Engine):
         """
-        A class combining `Engine` and `Prefab` functionalities to create a screen-blinking effect by changing the background color periodically.
+        A class inheriting from `Engine` that demonstrates functionalities to create a screen-blinking effect by periodically changing the background color.
         """
 
         def start(self):
             """
-            Initializes the ScreenBlink engine by setting up a coroutine to execute `change`:
+            Initializes the ScreenBlinkPrefab engine by setting up a coroutine to execute `change`:
 
             - Coroutine is triggered after an initial delay of 30 ms.
             - Repeats every 15,000 ms (15 seconds).

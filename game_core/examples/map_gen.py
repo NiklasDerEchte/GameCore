@@ -1,7 +1,7 @@
 from perlin_noise import PerlinNoise
 from game_core.src import *
 
-class MagGen(Engine, Prefab):
+class MagGenPrefab(Engine):
 
     def awake(self):
         self.priority_layer = -1

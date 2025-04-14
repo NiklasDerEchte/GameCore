@@ -1,6 +1,6 @@
 from game_core.src import *
 
-class SnowflakeEffect(Engine, Prefab):
+class SnowflakeEffectPrefab(Engine):
     def awake(self):
         self.priority_layer = 2
 

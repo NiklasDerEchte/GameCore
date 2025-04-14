@@ -54,4 +54,4 @@ The ``NavAgent`` class is used for controlled approximation from one position to
             # destination reached
 
 * Example:
-    `SimulationAiUnit <https://github.com/NiklasDerEchte/GameCore/blob/master/game_core/examples/ai_simulation.py#L121>`__ in ``ai_simulation.py``
+    `SimulationAiUnitPrefab <https://github.com/NiklasDerEchte/GameCore/blob/master/game_core/examples/ai_simulation.py#L121>`__ in ``ai_simulation.py``

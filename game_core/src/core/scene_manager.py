@@ -1,4 +1,5 @@
 from .engine import Engine
+from .surface_stack import SurfaceStack
 import inspect
 
 def scene(name):
@@ -23,6 +24,16 @@ class Scene:
     def __init__(self, name, engines=None):
         self._name = name
         self._engines = engines if engines is not None else []
+        self._surface_stack = SurfaceStack()
+        
+    def get_surface_stack(self) -> SurfaceStack:
+        """
+        Retrieves the surface stack associated with the scene.
+
+        :return: The surface stack instance.
+        :rtype: SurfaceStack
+        """
+        return self._surface_stack
         
     def instantiate_engine(self, engine, **kwargs):
         """
@@ -103,9 +114,8 @@ class Scene:
         self._engines = sorted(self._engines, key=lambda x: x.priority_layer, reverse=False)
         self._call_start_func()
 
-    def exit(self):
-        for engine in self._engines:
-            engine.on_exit()
+    def _on_exit(self):
+        self._call_destroy_func()
 
     def _update(self):
         self._call_update_func()
@@ -138,6 +148,11 @@ class Scene:
             for engine in self._engines:
                 if engine.is_enabled:
                     engine.fixed_update()
+                    
+    def _call_destroy_func(self):
+        if len(self._engines) > 0:
+            for engine in self._engines:
+                engine.on_destroy()
 
 class SceneManager:
     def __init__(self):
@@ -154,14 +169,17 @@ class SceneManager:
     def set_scene(self, scene_name):
         if len(self._scenes) == 0:
             raise Exception("No scenes available")
-        for scene in self._scenes:
-            if scene._name == scene_name:
-                self._current_scene = scene
-                self.current_scene._on_enter()
-                return
         if scene_name == None:
             self._current_scene = self._scenes[0]
             self._current_scene._on_enter()
+            return
+        for scene in self._scenes:
+            if scene._name == scene_name:
+                if self._current_scene is not None:
+                    self._current_scene._on_exit()
+                self._current_scene = scene
+                self._current_scene._on_enter()
+                return
         
     def scene(self) -> Scene:
         """

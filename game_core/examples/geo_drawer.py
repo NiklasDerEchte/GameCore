@@ -1,5 +1,5 @@
 from game_core.src import *
-class GeoDrawer(Engine, Prefab):
+class GeoDrawerPrefab(Engine):
 
     def awake(self):
         self.priority_layer = 99

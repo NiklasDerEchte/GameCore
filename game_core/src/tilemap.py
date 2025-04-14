@@ -69,7 +69,7 @@ class Camera:
         return (rect.x, rect.y)
 
 
-class TileMapDrawer(Engine, Prefab):
+class TileMapDrawerPrefab(Engine):
     def awake(self):
         self.is_enabled = False
         self.priority_layer = -2

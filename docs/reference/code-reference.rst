@@ -15,11 +15,6 @@ Code-Reference
     :inherited-members:
     :special-members:
 
-.. autoclass:: game_core.core.Prefab
-    :members:
-    :inherited-members:
-    :special-members:
-
 .. autoclass:: game_core.core.Grid
     :members:
     :inherited-members:

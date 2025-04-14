@@ -36,7 +36,7 @@ class Field:
             self._size[1]
         )
     
-class GridNavigation(Engine, Prefab):
+class GridNavigationPrefab(Engine):
 
     def awake(self, grid_size=(300, 300), cell_size=(20, 20), margin=5, priority_layer=-1, field_class=Field):
         self.priority_layer = priority_layer

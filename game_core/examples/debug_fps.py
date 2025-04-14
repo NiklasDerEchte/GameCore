@@ -1,6 +1,6 @@
 from game_core.src import *
 
-class DebugFps(Engine, Prefab):
+class DebugFpsPrefab(Engine):
 
     def awake(self):
         self.priority_layer = 1000

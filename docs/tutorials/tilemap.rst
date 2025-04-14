@@ -22,7 +22,7 @@ TileMapDrawer
     class MyEngine(Engine):
 
         def start(self):
-            self.tile_map_drawer = self.core.instantiate(TileMapDrawer) # create TileMapDrawer engine
+            self.tile_map_drawer = self.core.instantiate(TileMapDrawerPrefab) # create TileMapDrawerPrefab engine
             self.tile_map_drawer.enable(tile_map_path="map.tmx") # enable engine, load and draw map
             self.camera = self.tile_map_drawer.get_camera()
 

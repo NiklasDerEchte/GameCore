@@ -1,5 +1,5 @@
 from game_core.src import *
-class ScreenBlink(Engine, Prefab):
+class ScreenBlinkPrefab(Engine):
     def start(self):
         self.coroutines = [
             Coroutine(

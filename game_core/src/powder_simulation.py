@@ -16,7 +16,7 @@ class Material(Enum):
     ICE = 8
     ACID = 9
 
-class PowderSimulation(Engine, Prefab):
+class PowderSimulationPrefab(Engine):
     def __init__(self, core):
         super().__init__(core)
         self.width = 0

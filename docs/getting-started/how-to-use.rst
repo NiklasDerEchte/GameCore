@@ -23,20 +23,35 @@ Here is an example of how you can use the engine to create a simple game loop:
 
     from game_core.core import *
 
-    def start(core): # <- here u get the core object
-        # initialize game objects here
-        pass
+    @scene("example_scene")
+    class ExampleModule(Engine):
+        def start(self):
+            # initialize game objects here
+            print("ExampleModule started")
 
-    def update():
-        # update game objects here
-        pass
+        def update():
+            # update game objects here
+            pass
 
-    Core(update=update, start=start)
+    Core(
+        start_scene="example_scene",
+        background_color=(255, 255, 255, 0), 
+        fps=60
+    )
+
+What is a Scene?
+^^^^^^^^^^^^^^^^
+
+The ``@scene`` decorator is used to define a scene in your game. A scene is a collection of ``Engine`` and their associated logic that can be loaded and unloaded as needed. The decorator takes a string argument that specifies the name of the scene.
+
+``SceneManager`` is responsible for managing the scenes in your game. It allows you to switch between them. You can access it through the ``core`` object.
+
+For ``GameCore`` to run, at least one scene must be defined in a loaded module.
 
 what is an Engine?
 ^^^^^^^^^^^^^^^^^^
 
-The ``Engine`` class is a base class that you can inherit from to create your own custom runtime controlled object. Engines are started after the Core class has been invoked. The following methods are available for you to override:
+The ``Engine`` class is a base class that you can inherit from to create your own custom runtime controlled object. The following methods are available for you to override:
 
 * ``awake`` Is called once at the beginning to set properties.
 * ``start`` Called once at the beginning or after first enable.
@@ -46,40 +61,18 @@ The ``Engine`` class is a base class that you can inherit from to create your ow
 * ``fixed_update`` Called in a certain tick rate.
 * ``on_destroy`` Called once after engine got destroyed
 
-To create your own engine, you can simply inherit from the ``Engine`` class and override any of the above methods as necessary.
+When an ``Engine`` class is decorated with the ``@scene`` decorator, it is instantiated at the start of the game. If the Engine is not decorated with the ``@scene`` decorator, it is considered a Prefab and must be instantiated manually.
 
 .. code-block:: python
 
     from game_core.core import *
 
-    class MyEngine(Engine):
+    class MyEnginePrefab(Engine):
         def start(self):
             print("MyEngine started")
 
         def update(self):
             print("MyEngine updated")
-
-    Core(background_color=(255, 255, 255, 0), fps=60)
-
-What is a Prefab Engine?
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-The lifecycle can be completely controlled and engines created dynamically via the parent ``Prefab``.
-
-.. code-block:: python
-
-    from game_core.core import *
-
-    class MyPrefab(Engine, Prefab):
-        def start(self):
-            print("MyPrefab started")
-
-    class MyEngine(Engine):
-        def start(self):
-            print("MyEngine started")
-            self.core.instantiate(MyPrefab) # starts lifecycle
-
-    Core(background_color=(255, 255, 255, 0), fps=60)
 
 enable / disable Engine
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -94,7 +87,7 @@ enable / disable Engine
 
     from game_core.core import *
 
-    class MyPrefab(Engine, Prefab):
+    class MyPrefab(Engine):
         def awake(self): # set pre configs
             self.is_enabled = False # Disable the start of the lifecycle at the instantiation and allow them to be enabled dynamically.
 
@@ -110,6 +103,7 @@ enable / disable Engine
             alive_time = self.core.elapsed_delta_time - self.start_time
             print("MyPrefab disabled after {}s".format(round(alive_time/1000)))
 
+    @scene("example_scene")
     class MyEngine(Engine):
         def start(self):
             print("MyEngine started")
@@ -127,7 +121,7 @@ enable / disable Engine
                 self.prefab_engine.disable()
 
 
-    Core(background_color=(255, 255, 255, 0), fps=60)
+    Core(background_color=(255, 255, 255, 0), fps=60, start_scene="example_scene")
 
 Output:
 

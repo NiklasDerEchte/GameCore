@@ -129,16 +129,16 @@ class Engine:
 
     def on_enable(self, inject=None):
         """
-        Called when the engine is enabled.
+        Triggered when the engine is enabled via the enable() method.
 
-        :param inject: Optional data to inject during enabling.
+        :param inject: Optional data to be injected during the enabling process.
         :type inject: dict
         """
         pass
 
     def on_disable(self):
         """
-        Called when the engine is disabled.
+        Called when the engine is disabled, via the disable() method.
         """
         pass
 
@@ -162,6 +162,6 @@ class Engine:
 
     def on_destroy(self):
         """
-        Called before the engine is destroyed.
+        This method is called when the engine is about to be destroyed or when a scene change occurs.
         """
         pass

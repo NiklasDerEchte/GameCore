@@ -6,7 +6,6 @@ import string
 from .coroutine import Coroutine
 from .engine import Engine
 from .surface_stack import SurfaceStack, SurfaceStackElement
-from .prefab import Prefab
 from .scene_manager import SceneManager, Scene, scene
 
 class Core:
@@ -72,7 +71,6 @@ class Core:
         self._flags = window_flags
         self._depth = window_depth
         self._window_size = None
-        self._surface_stack = SurfaceStack()
         self._start_scene = start_scene
 
         # config able properties
@@ -98,8 +96,7 @@ class Core:
 
     def _load_engines(self):
         for engine_class in Engine.__subclasses__():
-            if not Prefab in engine_class.__bases__:
-                e = engine_class(self)  # init new engine class
+            e = engine_class(self)  # init new engine class
     
     def get_scene_manager(self):
         """
@@ -135,7 +132,7 @@ class Core:
             if self._fixed_update_interval_counter >= self.fixed_update_interval:
                 self._fixed_update_interval_counter = self._fixed_update_interval_counter - self.fixed_update_interval #add rest of interval_counter back
                 self.get_scene_manager().scene()._fixed_update()
-            self._surface_stack.draw(self)
+            self._scene_manager.scene().get_surface_stack().draw(self)
             self.fps = round(self.clock.get_fps(), 2)
             pygame.display.update()
             pygame.display.flip()
@@ -152,7 +149,7 @@ class Core:
         :return: The surface object of the specified layer.
         :rtype: pygame.Surface
         """
-        return self._surface_stack.get_surface(name)
+        return self._scene_manager.scene().get_surface_stack().get_surface(name)
 
     def remove_layer_surface(self, name):
         """
@@ -161,7 +158,7 @@ class Core:
         :param name: The name of the layer to remove.
         :type name: str
         """
-        self._surface_stack.remove_element(name)
+        self._scene_manager.scene().get_surface_stack().remove_element(name)
 
     def move_layer_surface(self, name, position):
         """
@@ -172,7 +169,7 @@ class Core:
         :param position: The new top-left position of the surface in (x, y) coordinates.
         :type position: tuple[int, int]
         """
-        self._surface_stack.get_element(name).surface_render_position = position
+        self._scene_manager.scene().get_surface_stack().get_element(name).surface_render_position = position
 
     def create_layer_surface(self, name=None, width=0, height=0, x=0, y=0, render_layer: int = 0, fill_after_draw=True):
         """
@@ -204,7 +201,7 @@ class Core:
             name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
 
         img = pygame.surface.Surface((width, height), pygame.SRCALPHA, 32)
-        self._surface_stack.add_element(name, img.convert_alpha(), render_layer, surface_render_position=(x, y), fill_after_draw=fill_after_draw)
+        self._scene_manager.scene().get_surface_stack().add_element(name, img.convert_alpha(), render_layer, surface_render_position=(x, y), fill_after_draw=fill_after_draw)
 
         return self.get_layer_surface(name)
 
@@ -240,7 +237,7 @@ class Core:
     def instantiate(self, engine, **kwargs):
         """
         Creates and initializes a new instance of an engine class at runtime.
-        This method is particularly suitable for creating **prefabs**, which are reusable templates for engines.
+        This method is particularly suitable for creating **prefabs**, which are reusable templates as engines.
 
         :param engine: The engine class to instantiate. Must be a subclass of `Engine`.
         :type engine: type

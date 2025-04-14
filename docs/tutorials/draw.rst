@@ -25,6 +25,8 @@ Surface Layer Draw System
 
 The surface layer draw system is a class for organizing and rendering multiple surfaces in a specific order. Each surface is assigned to a layer, and the system ensures that surfaces are drawn sequentially from the background to the foreground based on their layer priority.
 
+Each ``scene`` has its own ``SurfaceLayerDrawSystem``. The current system is accessible via the ``core`` object.
+
 In this super clear sketch, you can see that the layer draw system is based on the window provided by the pygame. The individual surfaces are layered with a priority, while they can have individual sizes.
 
 .. image:: ../_images/surface-layer-example.png
@@ -64,7 +66,7 @@ To start, create a system to draw a simple blue box on the screen. The box will 
 
     from game_core.core import *
 
-    class DrawSystem(Engine, Prefab):
+    class DrawSystemPrefab(Engine):
         """
         A simple drawing system that draws a static colored box on the screen.
 
@@ -110,7 +112,7 @@ Next, draw an image sprite centered on the screen. Use ``SimpleImageSprite`` for
 
 .. code-block:: python
 
-    class DrawSystemImage(Engine, Prefab):
+    class DrawSystemImagePrefab(Engine):
         """
         A drawing system that draws an image sprite at the center of the screen.
 
@@ -199,7 +201,7 @@ Create a sprite animation using multiple frames of an image. This example uses a
 
 .. code-block:: python
 
-    class DrawSystemAnimationImage(Engine, Prefab):
+    class DrawSystemAnimationImagePrefab(Engine):
         """
         A drawing system that animates an image sprite and displays it on the screen.
 
@@ -275,7 +277,7 @@ Use sprite slicing to handle animations from a single sprite sheet.
     Each class provides unique functionality for managing sprite slicing and animation states.
     """
 
-    class DrawSystemAnimationImageSliced(Engine, Prefab):
+    class DrawSystemAnimationImageSlicedPrefab(Engine):
         """
         A drawing system that displays an animated sprite using sliced frames from a single sprite sheet.
 
@@ -356,7 +358,7 @@ For sprite sheets with padding or gaps, include padding parameters in the slicin
 
 .. code-block:: python
 
-    class DrawSystemAnimationImageSlicedWithPaddings(Engine, Prefab):
+    class DrawSystemAnimationImageSlicedWithPaddingsPrefab(Engine):
         """
         A drawing system that displays an animated sprite using sliced frames from a sprite sheet with paddings.
 
@@ -460,7 +462,7 @@ Finally, automate animation handling with a directory-based system. This allows 
 
 .. code-block:: python
 
-    class DrawSystemDirectoryAnimationImageSliced(Engine, Prefab):
+    class DrawSystemDirectoryAnimationImageSlicedPrefab(Engine):
         """
         A drawing system that displays animations loaded from a directory containing sprite sheets.
 

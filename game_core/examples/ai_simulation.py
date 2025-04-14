@@ -7,7 +7,7 @@ from game_core.src import *
 FOOD_UNITS = []
 AI_UNITS = []
 
-class AiSimulationSpawner(Engine, Prefab):
+class AiSimulationSpawnerPrefab(Engine):
     def awake(self):
         self.priority_layer = 50
 
@@ -18,8 +18,8 @@ class AiSimulationSpawner(Engine, Prefab):
             Coroutine(func=self.spawn_unit, interval=900, call_delay=1200),
             Coroutine(func=self.spawn_food, interval=1100, call_delay=6000)
         ]
-        self.fog = self.core.instantiate(Fog)
-        self.core.instantiate(StatsDisplay)
+        self.fog = self.core.instantiate(FogPrefab)
+        self.core.instantiate(StatsDisplayPrefab)
         self.fog.enable()
 
     def update(self):
@@ -35,7 +35,7 @@ class AiSimulationSpawner(Engine, Prefab):
             if unit.is_dead:
                 self.core.destroy(unit)
                 FOOD_UNITS.remove(unit)
-        food_unit = self.core.instantiate(FoodAiUnit)
+        food_unit = self.core.instantiate(FoodAiUnitPrefab)
         food_unit.surface = self.surface
         FOOD_UNITS.append(food_unit)
 
@@ -45,15 +45,11 @@ class AiSimulationSpawner(Engine, Prefab):
                 AI_UNITS.remove(unit)
 
         if len(AI_UNITS) < self.max_units:
-            sim = self.core.instantiate(SimulationAiUnit)
+            sim = self.core.instantiate(SimulationAiUnitPrefab)
             AI_UNITS.append(sim)
             sim.surface = self.surface
 
-
-##############################
-#           prefab           #
-##############################
-class FoodAiUnit(Engine, Prefab):
+class FoodAiUnitPrefab(Engine):
     def start(self):
         self.countdown = 0
         self.size = 5
@@ -113,12 +109,7 @@ class FoodAiUnit(Engine, Prefab):
                         unit_distance = dist
         return closest_unit
 
-
-
-##############################
-#           prefab           #
-##############################
-class SimulationAiUnit(Engine, Prefab):
+class SimulationAiUnitPrefab(Engine):
 
     def start(self):
         self.countdown = 0
@@ -259,7 +250,7 @@ class SimulationAiUnit(Engine, Prefab):
         return found_unit
 
 
-class StatsDisplay(Engine, Prefab):
+class StatsDisplayPrefab(Engine):
     def awake(self):
         self.priority_layer = 81
 

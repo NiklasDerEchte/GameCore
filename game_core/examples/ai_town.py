@@ -1,5 +1,5 @@
 from game_core.src import *
-class AiTownSpawner(Engine, Prefab):
+class AiTownSpawnerPrefab(Engine):
     def awake(self):
         self.priority_layer = 50
 
@@ -12,13 +12,10 @@ class AiTownSpawner(Engine, Prefab):
         ]
 
     def spawn(self):
-        self.units.append(self.core.instantiate(DefaultAiUnit))
+        self.units.append(self.core.instantiate(DefaultAiUnitPrefab))
         print("Units Alive {}".format(len(self.units)))
 
-##############################
-#           prefab           #
-##############################
-class DefaultAiUnit(Engine, Prefab):
+class DefaultAiUnitPrefab(Engine):
 
     def start(self):
         print("Start AI with id {}!".format(id(self)))

@@ -33,7 +33,7 @@ class Field:
             self._size[1]
         )
 
-class GridView(Engine, Prefab):
+class GridViewPrefab(Engine):
 
     def awake(self, grid_size=(300, 300), cell_size=(20, 20), margin=5, priority_layer=-1, field_class=Field):
         self.priority_layer = priority_layer

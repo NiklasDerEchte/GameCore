@@ -2,7 +2,7 @@ import numpy as np
 
 from game_core.src import *
 
-class Projection(Engine, Prefab):
+class ProjectionPrefab(Engine):
 
     def awake(self):
         self.priority_layer = 5
