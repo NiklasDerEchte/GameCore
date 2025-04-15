@@ -13,7 +13,6 @@ def scene(name):
             original_init(self, *args, **kwargs)
             core = args[0]
             core.get_scene_manager().setup_engine(name, self)
-            print(f"[Scene-Init] Szene '{name}' wurde initialisiert für Instanz: {self}")
 
         cls.__init__ = _init
         return cls
