@@ -6,16 +6,23 @@ v1.6
 
 v1.5.4 - v1.6
 ---------------
+
 **New**
+
 - ``@scene``-decorator and ``scene_manager`` added.
 
 **Changed**
+
 - ``core`` structure
+
 - ``core`` must now have at least one scene to run
+
 - removed simple ``start``-func and ``update``-func runtime
+
 - ``Prefab`` base class removed -> engines without ``@scene``-decorator are now prefabs 
 
 **Fixes**
+
 - ``docs``-coroutine code fixed
 
 v1.5

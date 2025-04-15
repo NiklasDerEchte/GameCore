@@ -65,7 +65,7 @@ class Core:
 
         # private properties
         self._fixed_update_interval_counter = 0
-        self._scene_manager = SceneManager()
+        self._scene_manager = SceneManager(self)
         self._display = display
         self._flags = window_flags
         self._depth = window_depth
@@ -247,8 +247,8 @@ class Core:
         :rtype: Engine
         :raises TypeError: If the provided `engine` is not a subclass of `Engine`.
         """
-        if isinstance(engine, Engine):    
-            return self.get_scene_manager().scene().instantiate_engine(engine)
+        if issubclass(engine, Engine):    
+            return self.get_scene_manager().scene().instantiate_engine(engine, **kwargs)
         return None
 
 

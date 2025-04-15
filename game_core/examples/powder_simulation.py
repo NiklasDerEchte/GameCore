@@ -1,8 +1,6 @@
-from .core.core import *
+from game_core.src import *
 import random
-import math
 from enum import Enum
-from collections import deque
 
 class Material(Enum):
     EMPTY = 0
@@ -17,10 +15,10 @@ class Material(Enum):
     ACID = 9
 
 class PowderSimulationPrefab(Engine):
-    def __init__(self, core):
-        super().__init__(core)
-        self.width = 0
-        self.height = 0
+    
+    def awake(self, width=300, height=300):
+        self.width = width
+        self.height = height
         self.cell_size = 3  # Größe jedes Partikels in Pixeln
         self.grid = None
         self.temp_grid = None  # Für Temperaturberechnungen
@@ -83,20 +81,20 @@ class PowderSimulationPrefab(Engine):
             Material.ACID: 50
         }
 
-    def awake(self, width=300, height=300):
-        self.width = width // self.cell_size
-        self.height = height // self.cell_size
-        self.grid = [[Material.EMPTY for _ in range(self.width)] for _ in range(self.height)]
-        self.temp_grid = [[0.0 for _ in range(self.width)] for _ in range(self.height)]
-        self.surface = self.core.create_layer_surface(width=width, height=height)
+    def start(self):
+        self.cell_width = self.width // self.cell_size
+        self.cell_height = self.height // self.cell_size
+        self.grid = [[Material.EMPTY for _ in range(self.cell_width)] for _ in range(self.cell_height)]
+        self.temp_grid = [[0.0 for _ in range(self.cell_width)] for _ in range(self.cell_height)]
+        self.surface = self.core.create_layer_surface(width=self.width, height=self.height)
         
         # Wände hinzufügen
-        for x in range(self.width):
+        for x in range(self.cell_width):
             self._set_material(x, 0, Material.STONE)
-            self._set_material(x, self.height-1, Material.STONE)
-        for y in range(self.height):
+            self._set_material(x, self.cell_height-1, Material.STONE)
+        for y in range(self.cell_height):
             self._set_material(0, y, Material.STONE)
-            self._set_material(self.width-1, y, Material.STONE)
+            self._set_material(self.cell_width-1, y, Material.STONE)
     
     def _place_material(self, x, y, material):
         radius = self.brush_size // 2
@@ -105,7 +103,7 @@ class PowderSimulationPrefab(Engine):
                 dist = dx*dx + dy*dy
                 if dist <= radius*radius:
                     nx, ny = x + dx, y + dy
-                    if 0 <= nx < self.width and 0 <= ny < self.height:
+                    if 0 <= nx < self.cell_width and 0 <= ny < self.cell_height:
                         if material == Material.FIRE:
                             # Feuer kann nur auf brennbaren Materialien platziert werden
                             if self.grid[ny][nx] in self.flammability and self.flammability[self.grid[ny][nx]] > 0:
@@ -121,13 +119,13 @@ class PowderSimulationPrefab(Engine):
             self.temp_grid[y][x] = 0
     
     def _clear_grid(self):
-        for y in range(1, self.height-1):
-            for x in range(1, self.width-1):
+        for y in range(1, self.cell_height-1):
+            for x in range(1, self.cell_width-1):
                 self._set_material(x, y, Material.EMPTY)
     
     def _randomize_grid(self):
-        for y in range(1, self.height-1):
-            for x in range(1, self.width-1):
+        for y in range(1, self.cell_height-1):
+            for x in range(1, self.cell_width-1):
                 r = random.random()
                 if r < 0.1:
                     self._set_material(x, y, Material.SAND)
@@ -141,6 +139,7 @@ class PowderSimulationPrefab(Engine):
                     self._set_material(x, y, Material.EMPTY)
     
     def update(self):
+        self._handle_keys()
         if not self.is_running:
             self._draw_grid()
             return
@@ -157,11 +156,53 @@ class PowderSimulationPrefab(Engine):
             self._update_temperature()
         
         self._draw_grid()
+
+    def _handle_keys(self):
+        if self.surface is not None:
+            surface_offset = self.surface.get_offset()
+            surface_pos = (
+                self.core.mouse_position[0] - surface_offset[0],
+                self.core.mouse_position[1] - surface_offset[1]
+            )
+            
+            grid_x = int(surface_pos[0] // self.cell_size)
+            grid_y = int(surface_pos[1] // self.cell_size)
+
+            # Nur innerhalb des gültigen Bereichs arbeiten
+            if 0 <= grid_x < self.cell_width and 0 <= grid_y < self.cell_height:
+                # Linksklick - Aktuelles Material platzieren
+                if self.core.pressed_mouse[0]:
+                    self._place_material(grid_x, grid_y, self.current_material)
+                
+                # Rechtsklick - Material entfernen
+                elif self.core.pressed_mouse[2]:
+                    self._place_material(grid_x, grid_y, Material.EMPTY)
+        
+        # Materialauswahl
+        if self.core.pressed_keys[pygame.K_1]: self.current_material = Material.SAND
+        if self.core.pressed_keys[pygame.K_2]: self.current_material = Material.WATER
+        if self.core.pressed_keys[pygame.K_3]: self.current_material = Material.STONE
+        if self.core.pressed_keys[pygame.K_4]: self.current_material = Material.WOOD
+        if self.core.pressed_keys[pygame.K_5]: self.current_material = Material.FIRE
+        if self.core.pressed_keys[pygame.K_6]: self.current_material = Material.PLANT
+        if self.core.pressed_keys[pygame.K_7]: self.current_material = Material.ICE
+        if self.core.pressed_keys[pygame.K_8]: self.current_material = Material.ACID
+        
+        # Simulation steuern
+        if self.core.pressed_keys[pygame.K_SPACE]: self.is_running = not self.is_running
+        if self.core.pressed_keys[pygame.K_UP]: self.simulation_speed = min(10, self.simulation_speed + 1)
+        if self.core.pressed_keys[pygame.K_DOWN]: self.simulation_speed = max(1, self.simulation_speed - 1)
+        if self.core.pressed_keys[pygame.K_d]:
+            print("Debug")
+            self.show_debug = not self.show_debug
+        if self.core.pressed_keys[pygame.K_c]: self._clear_grid()
+        if self.core.pressed_keys[pygame.K_r]: self._randomize_grid()
+
     
     def _update_physics(self):
         # Wir gehen von unten nach oben durch das Grid für realistischere Physik
-        for y in range(self.height-2, 0, -1):
-            for x in range(1, self.width-1):
+        for y in range(self.cell_height-2, 0, -1):
+            for x in range(1, self.cell_width-1):
                 material = self.grid[y][x]
                 
                 if material == Material.SAND:
@@ -224,7 +265,7 @@ class PowderSimulationPrefab(Engine):
                     continue
                     
                 nx, ny = x + dx, y + dy
-                if 0 <= nx < self.width and 0 <= ny < self.height:
+                if 0 <= nx < self.cell_width and 0 <= ny < self.cell_height:
                     neighbor_mat = self.grid[ny][nx]
                     
                     # Brennbares Material entzünden
@@ -282,7 +323,7 @@ class PowderSimulationPrefab(Engine):
             
             for dx, dy in directions:
                 nx, ny = x + dx, y + dy
-                if 0 <= nx < self.width and 0 <= ny < self.height:
+                if 0 <= nx < self.cell_width and 0 <= ny < self.cell_height:
                     neighbor_mat = self.grid[ny][nx]
                     if neighbor_mat in [Material.STONE, Material.WOOD, Material.PLANT]:
                         if random.random() < 0.5:
@@ -304,7 +345,7 @@ class PowderSimulationPrefab(Engine):
     def _try_move(self, x, y, dx, dy):
         nx, ny = x + dx, y + dy
         
-        if 0 <= nx < self.width and 0 <= ny < self.height:
+        if 0 <= nx < self.cell_width and 0 <= ny < self.cell_height:
             current_mat = self.grid[y][x]
             target_mat = self.grid[ny][nx]
             
@@ -324,8 +365,8 @@ class PowderSimulationPrefab(Engine):
         # Temperaturberechnung (einfache Wärmeausbreitung)
         new_temp = [row[:] for row in self.temp_grid]
         
-        for y in range(1, self.height-1):
-            for x in range(1, self.width-1):
+        for y in range(1, self.cell_height-1):
+            for x in range(1, self.cell_width-1):
                 if self.grid[y][x] == Material.EMPTY:
                     continue
                     
@@ -339,7 +380,7 @@ class PowderSimulationPrefab(Engine):
                             continue
                             
                         nx, ny = x + dx, y + dy
-                        if 0 <= nx < self.width and 0 <= ny < self.height:
+                        if 0 <= nx < self.cell_width and 0 <= ny < self.cell_height:
                             temp_sum += self.temp_grid[ny][nx]
                             count += 1
                 
@@ -362,8 +403,8 @@ class PowderSimulationPrefab(Engine):
         # Grid auf Surface zeichnen
         self.surface.fill((0, 0, 0, 0))
         
-        for y in range(self.height):
-            for x in range(self.width):
+        for y in range(self.cell_height):
+            for x in range(self.cell_width):
                 material = self.grid[y][x]
                 color = self.color_map[material]
                 

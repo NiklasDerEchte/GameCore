@@ -21,12 +21,9 @@ class PreviewModule(Engine):
         # self.core.instantiate(DrawSystemAnimationImageSlicedPrefab)
         # self.core.instantiate(DrawSystemAnimationImageSlicedWithPaddingsPrefab)
         # self.core.instantiate(DrawSystemDirectoryAnimationImageSlicedPrefab)
+        self.core.instantiate(PowderSimulationPrefab, width=self.core.window_size[0], height=self.core.window_size[1])
 
 Core(
     background_color=(255, 255, 255, 0), 
     fps=60
 )
-
-# TODO
-# - Changelog update
-# - Powder Simulation

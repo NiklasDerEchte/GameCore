@@ -1,76 +1,76 @@
 Code-Reference
 ==============
 
-.. autoclass:: game_core.core.Core
+.. autoclass:: game_core.src.core.Core
     :members:
     :special-members:
 
-.. autoclass:: game_core.core.Coroutine
-    :members:
-    :inherited-members:
-    :special-members:
-
-.. autoclass:: game_core.core.Engine
+.. autoclass:: game_core.src.core.Coroutine
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: game_core.core.Grid
+.. autoclass:: game_core.src.core.Engine
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: game_core.core.Node
+.. autoclass:: game_core.src.a_star.Grid
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: game_core.core.NodePath
+.. autoclass:: game_core.src.a_star.Node
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: game_core.core.SurfaceStack
+.. autoclass:: game_core.src.a_star.NodePath
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: game_core.core.SurfaceStackElement
+.. autoclass:: game_core.src.surface_stack.SurfaceStack
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: game_core.core.sprite.Slicer
+.. autoclass:: game_core.src.surface_stack.SurfaceStackElement
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: game_core.core.sprite.SizeSlicer
+.. autoclass:: game_core.src.sprite.Slicer
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: game_core.core.sprite.AmountSlicer
+.. autoclass:: game_core.src.sprite.SizeSlicer
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: game_core.core.sprite.SimpleSprite
+.. autoclass:: game_core.src.sprite.AmountSlicer
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: game_core.core.sprite.SimpleImageSprite
+.. autoclass:: game_core.src.sprite.SimpleSprite
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: game_core.core.sprite.SimpleSpriteAnimator
+.. autoclass:: game_core.src.sprite.SimpleImageSprite
     :members:
     :inherited-members:
     :special-members:
 
-.. autoclass:: game_core.core.sprite.SpriteDirectoryAnimation
+.. autoclass:: game_core.src.sprite.SimpleSpriteAnimator
+    :members:
+    :inherited-members:
+    :special-members:
+
+.. autoclass:: game_core.src.sprite.SpriteDirectoryAnimation
     :members:
     :inherited-members:
     :special-members:
