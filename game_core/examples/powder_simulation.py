@@ -19,9 +19,9 @@ class PowderSimulationPrefab(Engine):
     def awake(self, width=300, height=300):
         self.width = width
         self.height = height
-        self.cell_size = 3  # Größe jedes Partikels in Pixeln
+        self.cell_size = 3
         self.grid = None
-        self.temp_grid = None  # Für Temperaturberechnungen
+        self.temp_grid = None
         self.color_map = {
             Material.EMPTY: (0, 0, 0, 0),
             Material.SAND: (194, 178, 128),
@@ -41,9 +41,8 @@ class PowderSimulationPrefab(Engine):
         self.brush_size = 5
         self.show_debug = False
         self.frames_since_last_update = 0
-        self.update_interval = 1  # Update every X frames
-        
-        # Materialeigenschaften
+        self.update_interval = 1
+    
         self.density_map = {
             Material.EMPTY: 0,
             Material.SAND: 5,
@@ -57,7 +56,6 @@ class PowderSimulationPrefab(Engine):
             Material.ACID: 2
         }
         
-        # Flammbarkeit (0 = nicht brennbar, 1 = sehr brennbar)
         self.flammability = {
             Material.WOOD: 0.8,
             Material.PLANT: 0.9,
@@ -67,14 +65,12 @@ class PowderSimulationPrefab(Engine):
             Material.WATER: 0.0,
             Material.ACID: 0.3
         }
-        
-        # Schmelzpunkt (Temperatur bei der das Material schmilzt)
+
         self.melting_point = {
             Material.ICE: 5,
             Material.WOOD: 200
         }
         
-        # Brenndauer (in Frames)
         self.burn_duration = {
             Material.WOOD: 300,
             Material.PLANT: 150,
@@ -88,7 +84,6 @@ class PowderSimulationPrefab(Engine):
         self.temp_grid = [[0.0 for _ in range(self.cell_width)] for _ in range(self.cell_height)]
         self.surface = self.core.create_layer_surface(width=self.width, height=self.height)
         
-        # Wände hinzufügen
         for x in range(self.cell_width):
             self._set_material(x, 0, Material.STONE)
             self._set_material(x, self.cell_height-1, Material.STONE)
@@ -105,16 +100,14 @@ class PowderSimulationPrefab(Engine):
                     nx, ny = x + dx, y + dy
                     if 0 <= nx < self.cell_width and 0 <= ny < self.cell_height:
                         if material == Material.FIRE:
-                            # Feuer kann nur auf brennbaren Materialien platziert werden
                             if self.grid[ny][nx] in self.flammability and self.flammability[self.grid[ny][nx]] > 0:
                                 self._set_material(nx, ny, material)
-                                self.temp_grid[ny][nx] = 300  # Starttemperatur für Feuer
+                                self.temp_grid[ny][nx] = 300
                         else:
                             self._set_material(nx, ny, material)
     
     def _set_material(self, x, y, material):
         self.grid[y][x] = material
-        # Temperatur zurücksetzen bei bestimmten Materialien
         if material in [Material.STONE, Material.WATER, Material.ICE]:
             self.temp_grid[y][x] = 0
     
@@ -168,39 +161,33 @@ class PowderSimulationPrefab(Engine):
             grid_x = int(surface_pos[0] // self.cell_size)
             grid_y = int(surface_pos[1] // self.cell_size)
 
-            # Nur innerhalb des gültigen Bereichs arbeiten
             if 0 <= grid_x < self.cell_width and 0 <= grid_y < self.cell_height:
-                # Linksklick - Aktuelles Material platzieren
                 if self.core.pressed_mouse[0]:
                     self._place_material(grid_x, grid_y, self.current_material)
                 
-                # Rechtsklick - Material entfernen
                 elif self.core.pressed_mouse[2]:
                     self._place_material(grid_x, grid_y, Material.EMPTY)
         
-        # Materialauswahl
-        if self.core.pressed_keys[pygame.K_1]: self.current_material = Material.SAND
-        if self.core.pressed_keys[pygame.K_2]: self.current_material = Material.WATER
-        if self.core.pressed_keys[pygame.K_3]: self.current_material = Material.STONE
-        if self.core.pressed_keys[pygame.K_4]: self.current_material = Material.WOOD
-        if self.core.pressed_keys[pygame.K_5]: self.current_material = Material.FIRE
-        if self.core.pressed_keys[pygame.K_6]: self.current_material = Material.PLANT
-        if self.core.pressed_keys[pygame.K_7]: self.current_material = Material.ICE
-        if self.core.pressed_keys[pygame.K_8]: self.current_material = Material.ACID
-        
-        # Simulation steuern
-        if self.core.pressed_keys[pygame.K_SPACE]: self.is_running = not self.is_running
-        if self.core.pressed_keys[pygame.K_UP]: self.simulation_speed = min(10, self.simulation_speed + 1)
-        if self.core.pressed_keys[pygame.K_DOWN]: self.simulation_speed = max(1, self.simulation_speed - 1)
-        if self.core.pressed_keys[pygame.K_d]:
-            print("Debug")
-            self.show_debug = not self.show_debug
-        if self.core.pressed_keys[pygame.K_c]: self._clear_grid()
-        if self.core.pressed_keys[pygame.K_r]: self._randomize_grid()
+        for event in self.core.events:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1: self.current_material = Material.SAND
+                elif event.key == pygame.K_2: self.current_material = Material.WATER
+                elif event.key == pygame.K_3: self.current_material = Material.STONE
+                elif event.key == pygame.K_4: self.current_material = Material.WOOD
+                elif event.key == pygame.K_5: self.current_material = Material.FIRE
+                elif event.key == pygame.K_6: self.current_material = Material.PLANT
+                elif event.key == pygame.K_7: self.current_material = Material.ICE
+                elif event.key == pygame.K_8: self.current_material = Material.ACID
+
+                elif event.key == pygame.K_SPACE: self.is_running = not self.is_running
+                elif event.key == pygame.K_UP: self.simulation_speed = min(10, self.simulation_speed + 1)
+                elif event.key == pygame.K_DOWN: self.simulation_speed = max(1, self.simulation_speed - 1)
+                elif event.key == pygame.K_d: self.show_debug = not self.show_debug
+                elif event.key == pygame.K_c: self._clear_grid()
+                elif event.key == pygame.K_r: self._randomize_grid()
 
     
     def _update_physics(self):
-        # Wir gehen von unten nach oben durch das Grid für realistischere Physik
         for y in range(self.cell_height-2, 0, -1):
             for x in range(1, self.cell_width-1):
                 material = self.grid[y][x]
@@ -219,11 +206,9 @@ class PowderSimulationPrefab(Engine):
                     self._update_acid(x, y)
     
     def _update_sand(self, x, y):
-        # Sand fällt nach unten
         if self._try_move(x, y, 0, 1):
             return
             
-        # Sand kann seitlich rutschen
         if random.random() < 0.5:
             if self._try_move(x, y, -1, 1) or self._try_move(x, y, 1, 1):
                 return
@@ -232,11 +217,9 @@ class PowderSimulationPrefab(Engine):
                 return
     
     def _update_water(self, x, y):
-        # Wasser fließt nach unten
         if self._try_move(x, y, 0, 1):
             return
             
-        # Wasser fließt seitlich
         directions = [-1, 1]
         random.shuffle(directions)
         
@@ -244,21 +227,17 @@ class PowderSimulationPrefab(Engine):
             if self._try_move(x, y, dx, 0):
                 return
                 
-        # Wasser kann auch diagonal fließen
         for dx in directions:
             if self._try_move(x, y, dx, 1):
                 return
     
     def _update_fire(self, x, y):
-        # Feuer breitet sich aus
         if self.temp_grid[y][x] <= 0:
             self._set_material(x, y, Material.EMPTY)
             return
             
-        # Temperatur verringern
         self.temp_grid[y][x] -= 1
         
-        # Nachbarmaterialien entzünden
         for dy in [-1, 0, 1]:
             for dx in [-1, 0, 1]:
                 if dx == 0 and dy == 0:
@@ -268,15 +247,13 @@ class PowderSimulationPrefab(Engine):
                 if 0 <= nx < self.cell_width and 0 <= ny < self.cell_height:
                     neighbor_mat = self.grid[ny][nx]
                     
-                    # Brennbares Material entzünden
                     if neighbor_mat in self.flammability and random.random() < self.flammability[neighbor_mat]:
                         if neighbor_mat == Material.WOOD and self.temp_grid[ny][nx] < 100:
-                            self.temp_grid[ny][nx] += 5  # Holz erwärmen
+                            self.temp_grid[ny][nx] += 5
                         elif self.temp_grid[ny][nx] > 150 and random.random() < 0.1:
                             self._set_material(nx, ny, Material.FIRE)
                             self.temp_grid[ny][nx] = 200
                     
-                    # Wasser löscht Feuer
                     if neighbor_mat == Material.WATER and random.random() < 0.3:
                         self._set_material(x, y, Material.EMPTY)
                         self.temp_grid[y][x] = 0
@@ -284,39 +261,32 @@ class PowderSimulationPrefab(Engine):
                             self._set_material(nx, ny, Material.EMPTY)
                         return
         
-        # Feuer kann nach oben steigen (als Flamme)
         if y > 0 and self.grid[y-1][x] == Material.EMPTY and random.random() < 0.2:
             self._set_material(x, y-1, Material.FIRE)
             self.temp_grid[y-1][x] = self.temp_grid[y][x] * 0.9
         
-        # Manchmal Rauch erzeugen
         if random.random() < 0.05:
             if y > 0 and self.grid[y-1][x] == Material.EMPTY:
                 self._set_material(x, y-1, Material.SMOKE)
     
     def _update_smoke(self, x, y):
-        # Rauch steigt auf
         if y > 0 and self._try_move(x, y, 0, -1):
             return
-            
-        # Rauch kann sich seitlich ausbreiten
+        
         directions = [-1, 1]
         random.shuffle(directions)
         for dx in directions:
             if self._try_move(x, y, dx, -1):
                 return
                 
-        # Rauch verschwindet nach einer Weile
         if random.random() < 0.1:
             self._set_material(x, y, Material.EMPTY)
     
     def _update_ice(self, x, y):
-        # Eis schmilzt bei hoher Temperatur
         if self.temp_grid[y][x] > self.melting_point[Material.ICE]:
             self._set_material(x, y, Material.WATER)
     
     def _update_acid(self, x, y):
-        # Säure frisst sich durch bestimmte Materialien
         if random.random() < 0.3:
             directions = [(0, 1), (-1, 0), (1, 0), (-1, 1), (1, 1)]
             random.shuffle(directions)
@@ -330,7 +300,6 @@ class PowderSimulationPrefab(Engine):
                             self._set_material(nx, ny, Material.EMPTY)
                         break
         
-        # Säure verhält sich ähnlich wie Wasser, aber aggressiver
         if self._try_move(x, y, 0, 1):
             return
             
@@ -348,13 +317,11 @@ class PowderSimulationPrefab(Engine):
         if 0 <= nx < self.cell_width and 0 <= ny < self.cell_height:
             current_mat = self.grid[y][x]
             target_mat = self.grid[ny][nx]
-            
-            # Leerer Platz oder Material mit geringerer Dichte?
+        
             if (target_mat == Material.EMPTY or 
                 (self.density_map[current_mat] > self.density_map[target_mat] and 
                  target_mat not in [Material.STONE, Material.ICE])):
                 
-                # Materialien tauschen
                 self.grid[y][x], self.grid[ny][nx] = self.grid[ny][nx], self.grid[y][x]
                 self.temp_grid[y][x], self.temp_grid[ny][nx] = self.temp_grid[ny][nx], self.temp_grid[y][x]
                 return True
@@ -362,7 +329,6 @@ class PowderSimulationPrefab(Engine):
         return False
     
     def _update_temperature(self):
-        # Temperaturberechnung (einfache Wärmeausbreitung)
         new_temp = [row[:] for row in self.temp_grid]
         
         for y in range(1, self.cell_height-1):
@@ -370,7 +336,6 @@ class PowderSimulationPrefab(Engine):
                 if self.grid[y][x] == Material.EMPTY:
                     continue
                     
-                # Wärme von Nachbarn übernehmen
                 temp_sum = 0
                 count = 0
                 
@@ -386,7 +351,6 @@ class PowderSimulationPrefab(Engine):
                 
                 if count > 0:
                     avg_temp = temp_sum / count
-                    # Material-spezifische Wärmeleitung
                     if self.grid[y][x] in [Material.STONE, Material.WOOD]:
                         new_temp[y][x] = avg_temp * 0.9
                     elif self.grid[y][x] == Material.WATER:
@@ -394,13 +358,11 @@ class PowderSimulationPrefab(Engine):
                     else:
                         new_temp[y][x] = avg_temp * 0.95
                     
-                    # Abkühlung
                     new_temp[y][x] = max(0, new_temp[y][x] - 0.1)
         
         self.temp_grid = new_temp
     
     def _draw_grid(self):
-        # Grid auf Surface zeichnen
         self.surface.fill((0, 0, 0, 0))
         
         for y in range(self.cell_height):
@@ -408,9 +370,7 @@ class PowderSimulationPrefab(Engine):
                 material = self.grid[y][x]
                 color = self.color_map[material]
                 
-                # Temperatur-Effekte
                 if material not in [Material.FIRE, Material.EMPTY, Material.SMOKE] and self.temp_grid[y][x] > 50:
-                    # Material erwärmen (Rot-Ton hinzufügen)
                     heat = min(200, self.temp_grid[y][x])
                     color = (
                         min(255, color[0] + heat * 0.7),
@@ -425,7 +385,6 @@ class PowderSimulationPrefab(Engine):
                     (x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size)
                 )
         
-        # Debug-Info anzeigen
         if self.show_debug:
             font = pygame.font.SysFont('Arial', 16)
             debug_text = [
@@ -436,5 +395,5 @@ class PowderSimulationPrefab(Engine):
             ]
             
             for i, text in enumerate(debug_text):
-                text_surface = font.render(text, True, (255, 255, 255))
+                text_surface = font.render(text, True, (255 - self.core.background_color[0], 255  - self.core.background_color[1], 255  - self.core.background_color[2]))
                 self.surface.blit(text_surface, (5, 5 + i * 20))
