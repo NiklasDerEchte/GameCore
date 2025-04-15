@@ -1,9 +1,3 @@
-import sys
-import random
-import pygame
-import inspect
-import string
-
 class Coroutine:
     """
     Represents a coroutine that periodically executes a function.

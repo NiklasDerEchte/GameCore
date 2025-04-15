@@ -1,9 +1,3 @@
-import sys
-import random
-import pygame
-import inspect
-import string
-
 class SurfaceStackElement:
     """
     Represents an individual element in a stack of rendering surfaces.

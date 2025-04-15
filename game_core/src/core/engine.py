@@ -1,8 +1,4 @@
-import sys
-import random
-import pygame
 import inspect
-import string
 
 from .coroutine import Coroutine
 

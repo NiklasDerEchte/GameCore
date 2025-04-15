@@ -27,6 +27,6 @@ Core(
     fps=60
 )
 
-# ToDo
-# - Coroutines should be made easier to control
+# TODO
+# - Changelog update
 # - Powder Simulation

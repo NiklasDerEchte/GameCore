@@ -3,7 +3,6 @@ import random
 import pygame
 import string
 
-from .coroutine import Coroutine
 from .engine import Engine
 from .surface_stack import SurfaceStack, SurfaceStackElement
 from .scene_manager import SceneManager, Scene, scene
@@ -87,6 +86,9 @@ class Core:
         self.elapsed_time_seconds = 0
         self.fps = 0
         self.events = []
+        self.pressed_keys = []
+        self.pressed_mouse = []
+        self.mouse_position = (0, 0)
         pygame.init()
         pygame.display.set_caption(title)
         pygame.font.init()
@@ -108,10 +110,9 @@ class Core:
         return self._scene_manager
     
     def _key_listener(self):
-        # TODO
-        # mouse_pos = pygame.mouse.get_pos()
-        # mouse_buttons = pygame.mouse.get_pressed()
-        # keys = pygame.key.get_pressed()
+        self.mouse_position = pygame.mouse.get_pos()
+        self.pressed_mouse = pygame.mouse.get_pressed()
+        self.pressed_keys = pygame.key.get_pressed()
         self.events = pygame.event.get()
         for key in self.events:
             if key.type == pygame.QUIT:

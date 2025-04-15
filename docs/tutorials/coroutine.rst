@@ -63,13 +63,13 @@ The ``ScreenBlinkPrefab`` class can also be easily tested using `preview.py <htt
             - Coroutine is triggered after an initial delay of 30 ms.
             - Repeats every 15,000 ms (15 seconds).
             """
-            self.coroutines = [
+            self.start_coroutine(
                 Coroutine(
                     func=self.change,
                     interval=15*1000,
                     call_delay=30,
                 )
-            ]
+            )
 
         def random_color(self):
             """
