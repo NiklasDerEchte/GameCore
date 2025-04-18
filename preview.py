@@ -22,6 +22,7 @@ class PreviewModule(Engine):
         # self.core.instantiate(DrawSystemAnimationImageSlicedWithPaddingsPrefab)
         # self.core.instantiate(DrawSystemDirectoryAnimationImageSlicedPrefab)
         # self.core.instantiate(PowderSimulationPrefab, width=self.core.window_size[0], height=self.core.window_size[1])
+        # self.core.instantiate(PlatformCharacterPrefab)
 
 Core(
     background_color=(255, 255, 255, 0), 

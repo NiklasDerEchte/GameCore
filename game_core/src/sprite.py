@@ -223,7 +223,7 @@ class SimpleImageSprite(pygame.sprite.Sprite):
         """
         self._image = pygame.transform.flip(self._image, flip_x, flip_y)
 
-    def get_image(self):
+    def get_image(self) -> pygame.Surface:
         """
         Returns the image or a sliced version of it.
 
@@ -233,7 +233,7 @@ class SimpleImageSprite(pygame.sprite.Sprite):
             return self._slicer.slice(self._image)
         return self._image
 
-    def get_rect(self):
+    def get_rect(self) -> pygame.Rect:
         """
         Returns the rectangular area of the image.
 
@@ -367,7 +367,7 @@ class SpriteDirectoryAnimation:
         self._project_path = project_path
         self._slicer = slicer
 
-    def parse(self):
+    def parse(self) -> dict[str, pygame.Surface]:
         """
         Parses the directory and loads animations.
 

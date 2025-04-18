@@ -11,3 +11,4 @@ from .tilemap import *
 from .agent import *
 from .sprite import *
 from .a_star import *
+from .character_controller import *

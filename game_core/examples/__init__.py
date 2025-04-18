@@ -14,3 +14,4 @@ from .grid_navigation import *
 from .screen_blink import *
 from .draw_system import *
 from .powder_simulation import *
+from .platform_character import *
