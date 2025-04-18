@@ -4,6 +4,17 @@ Changelog
 v1.6
 ^^^^
 
+v1.6 - v1.6.1
+---------------
+
+**Changed**
+
+- Import cycle changed in core. No adjustments are necessary here.
+
+**Fixes**
+
+- Important Bug Fix in ``Core.Instantiate()``. Engine was not returned
+
 v1.5.4 - v1.6
 ---------------
 

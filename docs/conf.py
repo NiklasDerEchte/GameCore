@@ -11,7 +11,7 @@ html_baseurl = 'https://niklaswockenfuss.de/'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'GameCore'
-copyright = '2024, Niklas Wockenfuß'
+copyright = '2025, Niklas Wockenfuß'
 author = 'Niklas Wockenfuß'
 
 # -- General configuration ---------------------------------------------------

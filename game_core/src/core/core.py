@@ -3,9 +3,9 @@ import random
 import pygame
 import string
 
+from pygame import Surface
 from .engine import Engine
-from .surface_stack import SurfaceStack, SurfaceStackElement
-from .scene_manager import SceneManager, Scene, scene
+from .scene_manager import SceneManager
 
 class Core:
     """
@@ -206,7 +206,7 @@ class Core:
 
         return self.get_layer_surface(name)
 
-    def create_surface(self, size=None):
+    def create_surface(self, size=None) -> Surface:
         """
         Creates a new surface with specified dimensions.
 
@@ -235,7 +235,7 @@ class Core:
             position = (0, 0)
         self.window.blit(surface, position)
 
-    def instantiate(self, engine, **kwargs):
+    def instantiate(self, engine, **kwargs) -> Engine:
         """
         Creates and initializes a new instance of an engine class at runtime.
         This method is particularly suitable for creating **prefabs**, which are reusable templates as engines.
@@ -252,7 +252,7 @@ class Core:
         return None
 
 
-    def destroy(self, engine):
+    def destroy(self, engine: Engine):
         """
         Destroys an engine instance and removes it from the list of active engines.
 

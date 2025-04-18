@@ -35,7 +35,7 @@ class Scene:
         """
         return self._surface_stack
         
-    def instantiate_engine(self, engine, **kwargs):
+    def instantiate_engine(self, engine: Engine, **kwargs) -> Engine:
         """
         Adds an engine instance to the scene.
 
@@ -54,10 +54,11 @@ class Scene:
                 e._is_started = True
             self._engines.append(e)
             self._engines = sorted(self._engines, key=lambda x: x.priority_layer, reverse=False)
+            return e
         else:
             raise TypeError("value must be an instance of Engine")
 
-    def destroy_engine(self, engine):
+    def destroy_engine(self, engine: Engine):
         """
         Destroys an engine instance and removes it from the list of active engines.
 

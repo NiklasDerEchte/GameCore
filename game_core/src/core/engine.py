@@ -1,6 +1,10 @@
+from typing import TYPE_CHECKING
 import inspect
 
 from .coroutine import Coroutine
+
+if TYPE_CHECKING:
+    from core import Core
 
 class Engine:
     """
@@ -15,7 +19,7 @@ class Engine:
      :var state_machines: List of state machines managed by the engine.
      :type state_machines: list
      """
-    def __init__(self, core):
+    def __init__(self, core: 'Core'):
         """
         Initializes the Engine.
 
