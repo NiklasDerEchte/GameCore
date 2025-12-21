@@ -1,8 +1,10 @@
-pygame
-perlin-noise
-bridson
-numpy
-pytmx
+pygame==2.6.1
+perlin-noise==1.14
+bridson==0.1.0
+numpy==2.4.0
+pytmx==3.32
+gunicorn==23.0.0
+eventlet==0.40.4
 
 # <setup-skip> for docs
 sphinx
