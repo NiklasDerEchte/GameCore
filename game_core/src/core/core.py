@@ -8,6 +8,7 @@ from .engine import Engine
 from .network.network_engine import RPCEngine, NetworkEngine
 from .scene_manager import SceneManager
 
+
 class Core:
     """
     Main game framework for managing the game loop, rendering, and engines.
@@ -32,19 +33,22 @@ class Core:
     def window_size(self, value):
         if self.window is not None:
             pygame.display.quit()
-        self.window = pygame.display.set_mode(value, flags=self._flags, depth=self._depth, display=self._display)
+        self.window = pygame.display.set_mode(
+            value, flags=self._flags, depth=self._depth, display=self._display
+        )
         self._window_size = value
 
-    def __init__(self,
-            title='GameCore <3',
-            start_scene=None,
-            size=(480, 480),
-            background_color=(0,0,0,0),
-            fps=30,
-            display=0,
-            window_flags=pygame.DOUBLEBUF,
-            window_depth=32):
-
+    def __init__(
+        self,
+        title="GameCore <3",
+        start_scene=None,
+        size=(480, 480),
+        background_color=(0, 0, 0, 0),
+        fps=30,
+        display=0,
+        window_flags=pygame.DOUBLEBUF,
+        window_depth=32,
+    ):
         """
         Initializes the Core framework.
 
@@ -78,7 +82,7 @@ class Core:
         self.window_size = size
         self.background_color = background_color
         self.is_running = True
-        self.fixed_update_interval = 1000/100 # every 100ms = 0.1s
+        self.fixed_update_interval = 1000 / 100  # every 100ms = 0.1s
         self.locked_fps = fps
 
         # init main vars and loop
@@ -100,10 +104,10 @@ class Core:
     def _load_engines(self):
         engine_classes = Engine.__subclasses__() + RPCEngine.__subclasses__()
         for engine_class in engine_classes:
-            if engine_class.__name__ == "RPCEngine": # skip base RPC engine
+            if engine_class.__name__ == "RPCEngine":  # skip base RPC engine
                 continue
             e = engine_class(self)  # init new engine class (calls scene logic)
-        e = NetworkEngine() # init the NetworkEngine
+        e = NetworkEngine(self)  # init the NetworkEngine
 
     def get_scene_manager(self):
         """
@@ -126,8 +130,10 @@ class Core:
     def _time_calculation(self):
         self.delta_time = self.clock.tick(self.locked_fps)
         self.elapsed_delta_time = self.elapsed_delta_time + self.delta_time
-        self.elapsed_time_seconds = self.elapsed_delta_time / 1000 # ms to s
-        self._fixed_update_interval_counter = self._fixed_update_interval_counter + self.delta_time
+        self.elapsed_time_seconds = self.elapsed_delta_time / 1000  # ms to s
+        self._fixed_update_interval_counter = (
+            self._fixed_update_interval_counter + self.delta_time
+        )
 
     def _game_loop(self):
         self.get_scene_manager().set_scene(self._start_scene)
@@ -136,7 +142,9 @@ class Core:
             self._key_listener()
             self.get_scene_manager().scene()._update()
             if self._fixed_update_interval_counter >= self.fixed_update_interval:
-                self._fixed_update_interval_counter = self._fixed_update_interval_counter - self.fixed_update_interval #add rest of interval_counter back
+                self._fixed_update_interval_counter = (
+                    self._fixed_update_interval_counter - self.fixed_update_interval
+                )  # add rest of interval_counter back
                 self.get_scene_manager().scene()._fixed_update()
             self._scene_manager.scene().get_surface_stack().draw(self)
             self.fps = round(self.clock.get_fps(), 2)
@@ -175,9 +183,20 @@ class Core:
         :param position: The new top-left position of the surface in (x, y) coordinates.
         :type position: tuple[int, int]
         """
-        self._scene_manager.scene().get_surface_stack().get_element(name).surface_render_position = position
+        self._scene_manager.scene().get_surface_stack().get_element(
+            name
+        ).surface_render_position = position
 
-    def create_layer_surface(self, name=None, width=0, height=0, x=0, y=0, render_layer: int = 0, fill_after_draw=True):
+    def create_layer_surface(
+        self,
+        name=None,
+        width=0,
+        height=0,
+        x=0,
+        y=0,
+        render_layer: int = 0,
+        fill_after_draw=True,
+    ):
         """
         Creates a new rendering layer surface.
 
@@ -204,10 +223,18 @@ class Core:
         if height == 0:
             height = self.window_size[1]
         if name == None:
-            name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+            name = "".join(
+                random.choice(string.ascii_uppercase + string.digits) for _ in range(8)
+            )
 
         img = pygame.surface.Surface((width, height), pygame.SRCALPHA, 32)
-        self._scene_manager.scene().get_surface_stack().add_element(name, img.convert_alpha(), render_layer, surface_render_position=(x, y), fill_after_draw=fill_after_draw)
+        self._scene_manager.scene().get_surface_stack().add_element(
+            name,
+            img.convert_alpha(),
+            render_layer,
+            surface_render_position=(x, y),
+            fill_after_draw=fill_after_draw,
+        )
 
         return self.get_layer_surface(name)
 
@@ -252,7 +279,7 @@ class Core:
         :rtype: Engine
         :raises TypeError: If the provided `engine` is not a subclass of `Engine`.
         """
-        if issubclass(engine, Engine):    
+        if issubclass(engine, Engine):
             return self.get_scene_manager().scene().instantiate_engine(engine, **kwargs)
         return None
 

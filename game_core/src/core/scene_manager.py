@@ -114,6 +114,15 @@ class Scene:
         else:
             raise Exception("value must be a class")
         return engine_list
+    
+    def get_engines(self):
+        """
+        Retrieves all engines in the scene.
+
+        :return: A list of all engine instances in the scene.
+        :rtype: list[Engine]
+        """
+        return self._engines
 
     def _on_enter(self):
         self._call_awake_func()
