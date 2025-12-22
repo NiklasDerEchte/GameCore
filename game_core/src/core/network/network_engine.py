@@ -30,6 +30,7 @@ class NetworkEngine:
     
     def _start_engine_grpc_server(self, port=50051):
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+        game_service_pb2_grpc.add_EngineRPCServicer_to_server(EngineServicer(), server)
         server.add_insecure_port(f"[::]:{port}")
         server.start()
         print(f"gRPC is running on port {port}...")

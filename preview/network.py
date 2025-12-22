@@ -7,7 +7,7 @@ from game_core import *
 @scene("network")
 class NetworkModule(RPCEngine):
     def start(self):
-        print("NetworkModule started...")
+        print("NetworkModule started")
         # TODO hier will ich hin, sodass die RPC calls von den dekoratoren ausgeführt werden
         # if isServer:
         #     client_rpc()

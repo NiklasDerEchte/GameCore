@@ -2,7 +2,6 @@ import sys
 import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from game_core import *
-from .network import *
 
 # TODO
 @scene("network")
@@ -18,10 +17,5 @@ class ClientNetworkModule(RPCEngine):
         except grpc.RpcError as e:
             print(f"RPC Error: {e}")
 
-# TODO - Wenn Server und Client gestartet werden:
-# RPC Error: <_InactiveRpcError of RPC that terminated with:
-#         status = StatusCode.UNIMPLEMENTED
-#         details = "Method not found!"
-#         debug_error_string = "UNKNOWN:Error received from peer  {grpc_message:"Method not found!", grpc_status:12}"
-
+# TODO - Client -> Server Klappt aber wie geht von Server -> Client?
 Core(background_color=(255, 255, 255, 0), fps=60)
