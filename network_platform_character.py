@@ -1,6 +1,6 @@
 
 from game_core.src import *
-
+# TODO Implement a Server - Client platform preview with this example
 class PlatformCharacterPrefab(Engine):
     def start(self):
         self.player: PlatformerCharacterControllerPrefab = self.core.instantiate(

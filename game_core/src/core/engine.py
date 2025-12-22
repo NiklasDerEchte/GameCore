@@ -8,18 +8,19 @@ if TYPE_CHECKING:
 
 class Engine:
     """
-     Represents a game engine responsible for managing coroutines and state machines.
+    Represents a game engine responsible for managing coroutines and state machines.
 
-     :var core: Reference to the Core instance managing the game loop.
-     :type core: Core
-     :var is_enabled: Indicates whether the engine is active.
-     :type is_enabled: bool
-     :var priority_layer: Determines the order of engine execution.
-     :type priority_layer: int
-     :var state_machines: List of state machines managed by the engine.
-     :type state_machines: list
-     """
-    def __init__(self, core: 'Core'):
+    :var core: Reference to the Core instance managing the game loop.
+    :type core: Core
+    :var is_enabled: Indicates whether the engine is active.
+    :type is_enabled: bool
+    :var priority_layer: Determines the order of engine execution.
+    :type priority_layer: int
+    :var state_machines: List of state machines managed by the engine.
+    :type state_machines: list
+    """
+
+    def __init__(self, core: "Core"):
         """
         Initializes the Engine.
 
@@ -44,7 +45,6 @@ class Engine:
                 if c.is_dead:
                     self.coroutines.remove(c)
 
-
     def _update_jobs(self):
         if len(self.coroutines) > 0:
             for c in self.coroutines:
@@ -65,7 +65,7 @@ class Engine:
         if len(kwargs.items()) > 0:
             data = kwargs
         if not self.is_enabled:
-            if 'inject' in inspect.getfullargspec(self.on_enable).args:
+            if "inject" in inspect.getfullargspec(self.on_enable).args:
                 self.on_enable(inject=data)
             else:
                 self.on_enable()
@@ -81,7 +81,6 @@ class Engine:
         """
         self.on_disable()
         self.is_enabled = False
-
 
     def start_func_as_coroutine(self, func, **kwargs):
         """

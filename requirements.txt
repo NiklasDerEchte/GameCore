@@ -5,6 +5,9 @@ numpy==2.4.0
 pytmx==3.32
 gunicorn==23.0.0
 eventlet==0.40.4
+python-socketio[client]==5.15.1
+grpcio==1.68.1
+grpcio-tools==1.68.1
 
 # <setup-skip> for docs
 sphinx

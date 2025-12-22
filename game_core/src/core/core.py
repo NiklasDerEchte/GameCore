@@ -5,6 +5,7 @@ import string
 
 from pygame import Surface
 from .engine import Engine
+from .network.network_engine import RPCEngine, NetworkEngine
 from .scene_manager import SceneManager
 
 class Core:
@@ -97,9 +98,13 @@ class Core:
         self._game_loop()
 
     def _load_engines(self):
-        for engine_class in Engine.__subclasses__():
-            e = engine_class(self)  # init new engine class
-    
+        engine_classes = Engine.__subclasses__() + RPCEngine.__subclasses__()
+        for engine_class in engine_classes:
+            if engine_class.__name__ == "RPCEngine": # skip base RPC engine
+                continue
+            e = engine_class(self)  # init new engine class (calls scene logic)
+        e = NetworkEngine() # init the NetworkEngine
+
     def get_scene_manager(self):
         """
         Retrieves the SceneManager instance.
@@ -108,7 +113,7 @@ class Core:
         :rtype: SceneManager
         """
         return self._scene_manager
-    
+
     def _key_listener(self):
         self.mouse_position = pygame.mouse.get_pos()
         self.pressed_mouse = pygame.mouse.get_pressed()
@@ -250,7 +255,6 @@ class Core:
         if issubclass(engine, Engine):    
             return self.get_scene_manager().scene().instantiate_engine(engine, **kwargs)
         return None
-
 
     def destroy(self, engine: Engine):
         """

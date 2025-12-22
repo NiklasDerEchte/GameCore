@@ -2,10 +2,12 @@ from .engine import Engine
 from .surface_stack import SurfaceStack
 import inspect
 
+
 def scene(name):
     """
     Decorator to register a engine to scene class with a name.
     """
+
     def decorator(cls):
         original_init = cls.__init__
 
@@ -19,13 +21,14 @@ def scene(name):
 
     return decorator
 
+
 class Scene:
     def __init__(self, core, name, engines=None):
         self._name = name
         self._engines = engines if engines is not None else []
         self._surface_stack = SurfaceStack()
         self._core = core
-        
+
     def get_surface_stack(self) -> SurfaceStack:
         """
         Retrieves the surface stack associated with the scene.
@@ -34,7 +37,7 @@ class Scene:
         :rtype: SurfaceStack
         """
         return self._surface_stack
-        
+
     def instantiate_engine(self, engine: Engine, **kwargs) -> Engine:
         """
         Adds an engine instance to the scene.
@@ -53,7 +56,9 @@ class Scene:
                 e.start()
                 e._is_started = True
             self._engines.append(e)
-            self._engines = sorted(self._engines, key=lambda x: x.priority_layer, reverse=False)
+            self._engines = sorted(
+                self._engines, key=lambda x: x.priority_layer, reverse=False
+            )
             return e
         else:
             raise TypeError("value must be an instance of Engine")
@@ -72,7 +77,7 @@ class Scene:
                     e.on_destroy()
                     self._engines.remove(e)
                     del e
-                    
+
     def get_engine_by_class(self, searchClass):
         """
         Finds and returns the first engine of a specific class type.
@@ -112,7 +117,9 @@ class Scene:
 
     def _on_enter(self):
         self._call_awake_func()
-        self._engines = sorted(self._engines, key=lambda x: x.priority_layer, reverse=False)
+        self._engines = sorted(
+            self._engines, key=lambda x: x.priority_layer, reverse=False
+        )
         self._call_start_func()
 
     def _on_exit(self):
@@ -120,14 +127,14 @@ class Scene:
 
     def _update(self):
         self._call_update_func()
-    
+
     def _fixed_update(self):
         self._call_fixed_update_func()
-    
+
     def _call_awake_func(self):
         if len(self._engines) > 0:
             for engine in self._engines:
-                 engine.awake()
+                engine.awake()
 
     def _call_start_func(self):
         if len(self._engines) > 0:
@@ -149,24 +156,43 @@ class Scene:
             for engine in self._engines:
                 if engine.is_enabled:
                     engine.fixed_update()
-                    
+
     def _call_destroy_func(self):
         if len(self._engines) > 0:
             for engine in self._engines:
                 engine.on_destroy()
+
 
 class SceneManager:
     def __init__(self, core):
         self._scenes = []
         self._current_scene = None
         self._core = core
-        
+
     def setup_engine(self, scene_name, engine):
-        for scene in self._scenes:
-            if scene._name == scene_name:
-                scene.instantiate_engine(engine)
-                return
-        self._scenes.append(Scene(self._core, scene_name, [engine]))
+        """
+        Sets up an engine in the specified scene.
+        
+        :param self: the SceneManager instance.
+        :param scene_name: the name of the scene.
+        :param engine: the engine instance or class to add to the scene.
+        """
+        if len(self._scenes) > 0:
+            for scene in self._scenes:
+                if scene._name == scene_name:
+                    if isinstance(engine, Engine):
+                        scene._engines.append(engine)
+                    else:
+                        scene.instantiate_engine(engine)
+                    return
+        else:
+            new_scene = None
+            if isinstance(engine, Engine):
+                new_scene = Scene(self._core, scene_name, [engine])
+            else:
+                new_scene = Scene(self._core, scene_name)
+                new_scene.instantiate_engine(engine)
+            self._scenes.append(new_scene)
 
     def set_scene(self, scene_name):
         if len(self._scenes) == 0:
@@ -182,7 +208,7 @@ class SceneManager:
                 self._current_scene = scene
                 self._current_scene._on_enter()
                 return
-        
+
     def scene(self) -> Scene:
         """
         Retrieves the current scene.
